@@ -19,14 +19,16 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 
-//@Table(name = "business_unit_catalog", schema = "oif_ods")
-@Table(name = "business_unit_catalog")
+@Table(name = "business_unit_catalog", schema = "oif_ods")
+//@Table(name = "business_unit_catalog")
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
+    @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq")
     private Integer id;
 
     @Column(unique = true, nullable = false)
