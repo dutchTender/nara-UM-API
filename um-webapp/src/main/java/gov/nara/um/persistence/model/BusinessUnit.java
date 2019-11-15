@@ -7,25 +7,20 @@ import gov.nara.common.persistence.model.INameableEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
-import java.util.Set;
+
 
 
 @Entity
 @Data
 @Getter
 @Setter
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "business_unit_catalog", schema = "oif_ods")
-//@Table(name = "business_unit_catalog")
+//@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
-
     @Id
-
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
     @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq")
@@ -40,8 +35,6 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     @Column( name="ldap_id", nullable = true)
     private String ldapName;
 
-
-
     @Override
     public Integer getId() {
         return id;
@@ -52,12 +45,6 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
         this.id = id;
 
     }
-
-    ////////////////////////////////////////////
-    // story #
-    ///////////////////////////////////////////
-
-    ///////////////////////////////////////////
 
     @Override
     public String getName() {
