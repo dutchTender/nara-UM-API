@@ -20,18 +20,9 @@ public class RedirectController {
 
     // API
 
-    @RequestMapping(value = UmMappings.Singular.PRIVILEGE)
-    public ResponseEntity<Void> privilegeToPrivileges(final HttpServletRequest request) {
-        return singularToPlural(request);
-    }
 
-    @RequestMapping(value = UmMappings.Singular.ROLE)
-    public ResponseEntity<Void> roleToRoles(final HttpServletRequest request) {
-        return singularToPlural(request);
-    }
-
-    @RequestMapping(value = UmMappings.Singular.USER)
-    public ResponseEntity<Void> userToUsers(final HttpServletRequest request) {
+    @RequestMapping(value = UmMappings.Singular.BUSINESSUNIT )
+    public ResponseEntity<Void> businessUnitToBusinessUnits(final HttpServletRequest request) {
         return singularToPlural(request);
     }
 
