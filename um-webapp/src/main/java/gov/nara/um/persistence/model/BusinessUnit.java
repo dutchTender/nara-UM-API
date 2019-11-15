@@ -19,7 +19,8 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 
-@Table(name = "business_unit_catalog", schema = "oif_ods")
+//@Table(name = "business_unit_catalog", schema = "oif_ods")
+@Table(name = "business_unit_catalog")
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
 

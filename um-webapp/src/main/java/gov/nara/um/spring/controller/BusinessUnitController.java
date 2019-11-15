@@ -1,4 +1,4 @@
-package gov.nara.um.web.controller;
+package gov.nara.um.spring.controller;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.AbstractController;

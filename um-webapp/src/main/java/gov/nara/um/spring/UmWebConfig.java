@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-@ComponentScan({ "gov.nara.um.web" })
+@ComponentScan({"gov.nara.um.spring.controller.web"})
 @EnableWebMvc
 @EnableSwagger2
 public class UmWebConfig implements WebMvcConfigurer {
