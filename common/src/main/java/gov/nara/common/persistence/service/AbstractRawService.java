@@ -37,7 +37,7 @@ public abstract class AbstractRawService<T extends IWithName> implements IRawSer
 
     @Override
     @Transactional(readOnly = true)
-    public T findOne(final long id) {
+    public T findOne(final Integer id) {
     	Optional<T> entity = getDao().findById(id);
     	return entity.orElse(null);
     }
@@ -119,7 +119,7 @@ public abstract class AbstractRawService<T extends IWithName> implements IRawSer
     }
 
     @Override
-    public void delete(final long id) {
+    public void delete(final Integer id) {
     	final Optional<T> entity = getDao().findById(id);
     	if(entity.isPresent()) {
     		ServicePreconditions.checkEntityExists(entity);
@@ -136,7 +136,7 @@ public abstract class AbstractRawService<T extends IWithName> implements IRawSer
 
     // template method
 
-    protected abstract PagingAndSortingRepository<T, Long> getDao();
+    protected abstract PagingAndSortingRepository<T, Integer> getDao();
 
     protected abstract JpaSpecificationExecutor<T> getSpecificationExecutor();
 

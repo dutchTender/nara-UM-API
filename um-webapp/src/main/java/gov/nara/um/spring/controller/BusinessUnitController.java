@@ -61,7 +61,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public BusinessUnit findOne(@PathVariable("id") final Long id) {
+    public BusinessUnit findOne(@PathVariable("id") final Integer id) {
         return findOneInternal(id);
     }
 
@@ -77,7 +77,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") final Long id, @RequestBody final BusinessUnit resource) {
+    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnit resource) {
         updateInternal(id, resource);
     }
 
@@ -90,7 +90,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") final Long id) {
+    public void delete(@PathVariable("id") final Integer id) {
         deleteByIdInternal(id);
     }
 

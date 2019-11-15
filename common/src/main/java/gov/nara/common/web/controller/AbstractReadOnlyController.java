@@ -24,7 +24,7 @@ public abstract class AbstractReadOnlyController<T extends IWithName> {
 
     // find - one
 
-    protected final T findOneInternal(final Long id) {
+    protected final T findOneInternal(final Integer id) {
         return RestPreconditions.checkNotNull(getService().findOne(id));
     }
 
@@ -72,11 +72,7 @@ public abstract class AbstractReadOnlyController<T extends IWithName> {
 
     // count
 
-    /**
-     * Counts all {@link Privilege} resources in the system
-     * 
-     * @return
-     */
+
     @RequestMapping(method = RequestMethod.GET, value = "/count")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)

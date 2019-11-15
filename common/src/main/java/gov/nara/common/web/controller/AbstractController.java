@@ -18,7 +18,7 @@ public abstract class AbstractController<T extends INameableEntity> extends Abst
     /**
      * - note: the operation is IDEMPOTENT <br/>
      */
-    protected final void updateInternal(final long id, final T resource) {
+    protected final void updateInternal(final Integer id, final T resource) {
         RestPreconditions.checkRequestElementNotNull(resource);
         RestPreconditions.checkRequestElementNotNull(resource.getId());
         RestPreconditions.checkRequestState(resource.getId() == id);
@@ -29,7 +29,7 @@ public abstract class AbstractController<T extends INameableEntity> extends Abst
 
     // delete/remove
 
-    protected final void deleteByIdInternal(final long id) {
+    protected final void deleteByIdInternal(final Integer id) {
         getService().delete(id);
     }
 
