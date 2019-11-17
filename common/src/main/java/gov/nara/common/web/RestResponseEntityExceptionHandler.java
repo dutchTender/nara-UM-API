@@ -3,6 +3,7 @@ package gov.nara.common.web;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
+import gov.nara.common.web.exception.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -17,13 +18,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import gov.nara.common.persistence.exception.MyEntityNotFoundException;
-import gov.nara.common.web.exception.MyBadRequestException;
-import gov.nara.common.web.exception.MyConflictException;
-import gov.nara.common.web.exception.MyForbiddenException;
-import gov.nara.common.web.exception.MyPreconditionFailedException;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+
 
     public RestResponseEntityExceptionHandler() {
         super();
@@ -35,15 +33,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler({ ConstraintViolationException.class, MyBadRequestException.class, DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleBadRequest(final RuntimeException ex, final WebRequest request) {
-        final String bodyOfResponse = "This should be application specific";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        //final String bodyOfResponse = "This should be application specific";
+        return handleExceptionInternal(ex, exceptionMessage(HttpStatus.BAD_REQUEST, ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final String bodyOfResponse = "This should be application specific";
+        //final String bodyOfResponse = "This should be application specific";
         // ex.getCause() instanceof JsonMappingException, JsonParseException // for additional information later on
-        return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, exceptionMessage(HttpStatus.BAD_REQUEST, ex), headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
@@ -96,5 +94,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         final String bodyOfResponse = "This should be application specific";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
+
+
+
+
+
+    private APIErrorDto exceptionMessage(final  HttpStatus httpStatus, final  Exception ex){
+        final  String message = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
+        final  String devMessage = ex.getClass().getSimpleName();
+
+        return new APIErrorDto(httpStatus.value(), message, devMessage);
+    }
+
 
 }

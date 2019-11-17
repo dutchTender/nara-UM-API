@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessUnitController.class)
 @AutoConfigureMockMvc
-
 public class BusinessUnitControllerUnitTest {
 
     @MockBean
@@ -36,7 +35,6 @@ public class BusinessUnitControllerUnitTest {
 
     @Autowired
     private MockMvc mvc;
-
 
 
     // List all unit test

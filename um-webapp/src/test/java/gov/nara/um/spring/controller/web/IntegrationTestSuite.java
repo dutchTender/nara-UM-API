@@ -1,11 +1,11 @@
-package gov.nara.um;
+package gov.nara.um.spring.controller.web;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ // @formatter:off
-    PersistenceSpringIntegrationTest.class,
+    BusinessUnitSpringIntegrationTest.class,
     ServiceSpringIntegrationTest.class,
     WebSpringIntegrationTest.class
 }) // @formatter:on

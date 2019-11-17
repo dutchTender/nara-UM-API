@@ -1,4 +1,4 @@
-package gov.nara.um;
+package gov.nara.um.spring.controller.web;
 
 import gov.nara.um.spring.UmContextConfig;
 import gov.nara.um.spring.UmPersistenceJpaConfig;

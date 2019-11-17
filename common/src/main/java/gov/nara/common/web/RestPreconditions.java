@@ -1,5 +1,6 @@
 package gov.nara.common.web;
 
+import gov.nara.common.persistence.exception.MyEntityNotFoundException;
 import gov.nara.common.web.exception.MyBadRequestException;
 import org.springframework.http.HttpStatus;
 
@@ -29,7 +30,7 @@ public final class RestPreconditions {
      *             if {@code reference} is null
      */
     public static <T> T checkNotNull(final T reference) {
-        return checkNotNull(reference, null);
+        return checkNotNull(reference, "The Requested resource does not exists.");
     }
 
     /**
@@ -46,9 +47,11 @@ public final class RestPreconditions {
      *             if {@code reference} is null
      */
     public static <T> T checkNotNull(final T reference, final String message) {
-        if (reference == null) {
-            throw new MyResourceNotFoundException(message);
-        }
+       if (reference == null) {
+           throw new MyResourceNotFoundException(message, new Throwable("The Requested resource does not exists."));
+      }
+
+
         return reference;
     }
 
