@@ -1,9 +1,11 @@
 package gov.nara.um.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gov.nara.common.interfaces.INameableDto;
 import gov.nara.common.persistence.model.INameableEntity;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,23 +18,24 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@Table(name = "business_unit_catalog", schema = "oif_ods")
-//@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
+//@Table(name = "business_unit_catalog", schema = "oif_ods")
+@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
     @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq")
+    @ApiModelProperty(hidden = true)
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column
     private String name;
 
-    @Column( nullable = false)
+    @Column
     private String org_code;
 
-    @Column( name="ldap_id", nullable = true)
+    @Column( name="ldap_id")
     private String ldapName;
 
     @Override

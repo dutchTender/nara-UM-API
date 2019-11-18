@@ -9,6 +9,7 @@ public abstract class AbstractController<T extends INameableEntity> extends Abst
 
     protected final void createInternal(final T resource) {
         RestPreconditions.checkRequestElementNotNull(resource);
+        // verifies that id is not part of the payload
         RestPreconditions.checkRequestState(resource.getId() == null);
         getService().create(resource);
     }
@@ -20,10 +21,14 @@ public abstract class AbstractController<T extends INameableEntity> extends Abst
      */
     protected final void updateInternal(final Integer id, final T resource) {
         RestPreconditions.checkRequestElementNotNull(resource);
-        RestPreconditions.checkRequestElementNotNull(resource.getId());
-        RestPreconditions.checkRequestState(resource.getId() == id);
-        RestPreconditions.checkNotNull(getService().findOne(resource.getId()));
-
+        RestPreconditions.checkRequestElementNotNull(id);
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        // the resource pay load will never have the id for a put call
+        // the id is passed though via parameters and hooked into the id parameter for this function
+        // check if payload has an id.
+        RestPreconditions.checkRequestState(resource.getId() == null);
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        RestPreconditions.checkNotNull(getService().findOne(id));
         getService().update(resource);
     }
 

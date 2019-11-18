@@ -2,7 +2,6 @@ package gov.nara.um.spring.controller.web;
 
 import gov.nara.um.persistence.dao.IBusinessUnitDao;
 import gov.nara.um.persistence.model.BusinessUnit;
-import gov.nara.um.service.impl.BusinessUnitServiceImpl;
 import gov.nara.um.spring.UmPersistenceJpaConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-
 @ContextConfiguration(classes = {UmPersistenceJpaConfig.class})
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class BusinessUnitSpringIntegrationTest {
@@ -43,6 +41,7 @@ public class BusinessUnitSpringIntegrationTest {
         //when
         BusinessUnit businessUnit1 = businessUnitDao.findByName(businessUnit.getName());
 
+        // verify that we can find the entity that was just added
         assertThat(businessUnit1.getName()).isEqualTo(businessUnit.getName());
     }
 

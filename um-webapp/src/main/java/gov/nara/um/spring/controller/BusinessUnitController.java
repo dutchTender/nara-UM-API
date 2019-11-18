@@ -108,6 +108,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final BusinessUnit resource) {
+
         createInternal(resource);
     }
 
