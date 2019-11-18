@@ -99,7 +99,7 @@ public final class RestPreconditions {
      *             if {@code expression} is false
      */
     public static void checkRequestState(final boolean expression) {
-        checkRequestState(expression, null);
+        checkRequestState(expression, "You can not specify id value in the service payload.");
     }
 
     /**
