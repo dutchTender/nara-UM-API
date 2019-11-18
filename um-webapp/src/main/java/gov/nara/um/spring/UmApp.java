@@ -3,9 +3,12 @@ package gov.nara.um.spring;
 import gov.nara.um.persistence.setup.MyApplicationContextInitializer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
+
+@ComponentScan({ "gov.nara" })
 @Import({ // @formatter:off
     UmContextConfig.class,
     UmPersistenceJpaConfig.class,

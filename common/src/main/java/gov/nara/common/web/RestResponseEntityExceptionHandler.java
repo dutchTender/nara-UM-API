@@ -58,8 +58,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     // 404
-    @ExceptionHandler( value = { MyResourceNotFoundException.class })
-    protected ResponseEntity<Object> handleResourceNotFound(final MyEntityNotFoundException ex, final WebRequest request) {
+    @ExceptionHandler( value = { gov.nara.common.web.exception.MyResourceNotFoundException.class })
+    protected ResponseEntity<Object> handleResourceNotFound(final MyResourceNotFoundException ex, final WebRequest request) {
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
