@@ -1,7 +1,6 @@
 package gov.nara.um.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gov.nara.common.interfaces.INameableDto;
 import gov.nara.common.persistence.model.INameableEntity;
@@ -10,7 +9,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-import java.util.Set;
+
 
 
 @Entity
@@ -18,8 +17,8 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//@Table(name = "business_unit_catalog", schema = "oif_ods")
-@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
+@Table(name = "business_unit_catalog", schema = "oif_ods")
+//@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Id
@@ -37,15 +36,6 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Column( name="ldap_id")
     private String ldapName;
-
-
-
-
-
-
-
-
-
 
     @Override
     public Integer getId() {

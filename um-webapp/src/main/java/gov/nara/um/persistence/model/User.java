@@ -17,15 +17,15 @@ import java.util.Set;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-//@Table(name = "user", schema = "oif_ods")
-@Table(name = "user")
+@Table(name = "user", schema = "oif_ods")
+//@Table(name = "user")
 public class User implements ILongNameableEntity, ILongNameableDto {
 
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
-    @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq")
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
+    @SequenceGenerator(name = "user_seq_gen", sequenceName = "oif_ods.user_user_id_seq")
     @ApiModelProperty(hidden = true)
     private Long id;
 
@@ -35,12 +35,14 @@ public class User implements ILongNameableEntity, ILongNameableDto {
 
     private String user_type;
 
+    private Long businessunit_id;
+
 
     @JoinTable(
             name = "user_business_unit",
             joinColumns = @JoinColumn(
                     name = "user_id",
-                    referencedColumnName = "id"
+                    referencedColumnName = "user_id"
             ),
             inverseJoinColumns = @JoinColumn(
                     name = "business_unit_id",
@@ -97,5 +99,13 @@ public class User implements ILongNameableEntity, ILongNameableDto {
 
     public void setUser_type(String user_type) {
         this.user_type = user_type;
+    }
+
+    public Long getBusinessunit_id() {
+        return businessunit_id;
+    }
+
+    public void setBusinessunit_id(Long businessunit_id) {
+        this.businessunit_id = businessunit_id;
     }
 }
