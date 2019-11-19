@@ -2,6 +2,12 @@ package gov.nara.um.persistence.setup;
 
 import java.util.Set;
 
+import gov.nara.um.persistence.dao.IBusinessUnitDao;
+import gov.nara.um.persistence.dao.IUserJpaDao;
+import gov.nara.um.persistence.model.BusinessUnit;
+import gov.nara.um.persistence.model.User;
+import gov.nara.um.service.IBusinessUnitService;
+import gov.nara.um.service.IUserService;
 import gov.nara.um.util.Um;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +32,12 @@ public class SecuritySetup implements ApplicationListener<ContextRefreshedEvent>
     private boolean setupDone;
 
 
+    @Autowired
+    private  IBusinessUnitService iBusinessUnitService;
+
+    @Autowired
+    private  IUserService iUserService;
+
 
     public SecuritySetup() {
         super();
@@ -46,6 +58,30 @@ public class SecuritySetup implements ApplicationListener<ContextRefreshedEvent>
             //createPrivileges();
             //createRoles();
             //createUsers();
+
+            User user = new User();
+            user.setName("Li.zhang");
+            user.setUser_type("ERA");
+
+            iUserService.create(user);
+
+            BusinessUnit businessUnit = new BusinessUnit();
+            businessUnit.setName("ADIS");
+            businessUnit.setOrg_code("NARA");
+            businessUnit.setLdapName("ADIS");
+            iBusinessUnitService.create(businessUnit);
+
+
+
+            User user2 = iUserService.findByName(user.getName());
+
+
+            user2.addBusinessUnit(businessUnit);
+            iUserService.update(user2);
+
+
+
+
 
             setupDone = true;
             logger.info("Setup Done");

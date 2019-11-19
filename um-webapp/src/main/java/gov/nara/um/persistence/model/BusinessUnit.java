@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-
+import java.util.Set;
 
 
 @Entity
@@ -37,6 +37,15 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Column( name="ldap_id")
     private String ldapName;
+
+
+
+
+
+
+
+
+
 
     @Override
     public Integer getId() {
@@ -75,6 +84,8 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     public void setLdapName(String ldapName) {
         this.ldapName = ldapName;
     }
+
+
 
 
 }

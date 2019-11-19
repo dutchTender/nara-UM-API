@@ -6,13 +6,15 @@ public final class UmMappings {
 
     public static final String BUSINESSUNITS = "businessunits";
 
-
+    public static final String USERS = "USERS";
     // discoverability
 
     public static final class Singular {
 
 
         public static final String BUSINESSUNIT = "businessunit";
+
+        public static final String USER = "user";
     }
 
     public static final String AUTHENTICATION = "authentication";
