@@ -28,6 +28,9 @@ public class BusinessUnitSpringIntegrationTest {
     @Autowired
     private TestEntityManager entityManager;
 
+
+
+    // tests jpa add and jpa find one
     @Test
     public final void whenFindByName_thenReturnBusinessUnit() {
         //given
@@ -44,6 +47,32 @@ public class BusinessUnitSpringIntegrationTest {
         // verify that we can find the entity that was just added
         assertThat(businessUnit1.getName()).isEqualTo(businessUnit.getName());
     }
+
+
+
+    // test jpa delete
+    // tests jpa add and jpa find one
+    @Test
+    public final void whenFindByName_thenReturnBusinessUnit_then_verifyDelete() {
+        //given
+        BusinessUnit businessUnit = new BusinessUnit();
+        businessUnit.setName("xxxx");
+        businessUnit.setLdapName("xxxxxxxxx");
+        businessUnit.setOrg_code("apex");
+        entityManager.persist(businessUnit);
+        entityManager.flush();
+
+        //when
+        BusinessUnit businessUnit1 = businessUnitDao.findByName(businessUnit.getName());
+        entityManager.remove(businessUnit1);
+        entityManager.flush();
+
+        BusinessUnit businessUnit2 = businessUnitDao.findByName(businessUnit.getName());
+
+        // verify that we can find the entity that was just added
+        assertThat(businessUnit2).isEqualTo(null);
+    }
+
 
 
 
