@@ -1,6 +1,5 @@
 package gov.nara.common.web;
 
-import gov.nara.common.persistence.exception.MyEntityNotFoundException;
 import gov.nara.common.web.exception.MyBadRequestException;
 import org.springframework.http.HttpStatus;
 
