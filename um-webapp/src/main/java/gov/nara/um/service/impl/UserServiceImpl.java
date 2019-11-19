@@ -25,15 +25,7 @@ public class UserServiceImpl extends AbstractLongIdService<User>  implements IUs
 
     // find
 
-    @Override
-    public User findOne(Long id) {
-        return null;
-    }
 
-    @Override
-    public void delete(Long id) {
-
-    }
 
     @Override
     @Transactional(readOnly = true)
