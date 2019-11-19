@@ -29,7 +29,7 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     @ApiModelProperty(hidden = true)
     private Integer id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column

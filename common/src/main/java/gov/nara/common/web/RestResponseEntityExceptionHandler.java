@@ -4,6 +4,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
 import gov.nara.common.web.exception.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -28,7 +29,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // API
 
-    // 400
+    // 400  duplicate entry will be checked here
+
+
 
     @ExceptionHandler({ ConstraintViolationException.class, MyBadRequestException.class, DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleBadRequest(final RuntimeException ex, final WebRequest request) {
@@ -36,13 +39,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.BAD_REQUEST, ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
+    // bad request name
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
         //final String bodyOfResponse = "This should be application specific";
         // ex.getCause() instanceof JsonMappingException, JsonParseException // for additional information later on
+
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.BAD_REQUEST, ex), headers, HttpStatus.BAD_REQUEST, request);
     }
 
+    // bad request value
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
 
@@ -50,7 +56,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     // 403
-
+    // forbidden resource access
     @ExceptionHandler({ MyForbiddenException.class })
     public ResponseEntity<Object> handleForbidden(final MyForbiddenException ex, final WebRequest request) {
 
@@ -60,8 +66,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     // 404
     @ExceptionHandler( value = { gov.nara.common.web.exception.MyResourceNotFoundException.class })
     protected ResponseEntity<Object> handleResourceNotFound(final MyResourceNotFoundException ex, final WebRequest request) {
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
@@ -111,7 +115,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private APIErrorDto exceptionMessage(final  HttpStatus httpStatus, final  Exception ex){
         final  String message = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
-        final  String devMessage = ex.getClass().getSimpleName();
+        final  String devMessage = ExceptionUtils.getRootCauseMessage(ex);
 
         return new APIErrorDto(httpStatus.value(), message, devMessage);
     }
