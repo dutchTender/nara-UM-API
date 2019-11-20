@@ -80,7 +80,7 @@ public class User implements ILongNameableEntity, ILongNameableDto {
 
     @Override
     public Long getId() {
-        return null;
+        return Long.valueOf(id);
     }
 
 

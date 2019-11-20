@@ -24,9 +24,6 @@ public class UserServiceImpl extends AbstractLongIdService<User>  implements IUs
     // API
 
     // find
-
-
-
     @Override
     @Transactional(readOnly = true)
     public User findByName(final String name) {
