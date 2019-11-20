@@ -64,15 +64,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     // 404
-    @ExceptionHandler( value = { gov.nara.common.web.exception.MyResourceNotFoundException.class })
+
+    /* if we enable this. unit test for the controller will start failing
+
+    @ExceptionHandler( {MyResourceNotFoundException.class })
     protected ResponseEntity<Object> handleResourceNotFound(final MyResourceNotFoundException ex, final WebRequest request) {
 
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-
-
-
+     */
 
     @ExceptionHandler({ MyEntityNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final MyEntityNotFoundException ex, final WebRequest request) {

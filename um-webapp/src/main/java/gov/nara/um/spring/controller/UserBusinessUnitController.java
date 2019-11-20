@@ -79,14 +79,9 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<UserBusinessUnitDTO> findOne(@PathVariable("id") final Long id) {
-        // return the business unit of a user
-        // provided id here is the user id
-
 
         List<UserBusinessUnitDTO> returnList = new ArrayList<UserBusinessUnitDTO>();
-        // nothing to extract from the request
         User user = userService.findOne(id);
-        // build return list by looping through all users
         if(user != null){
             for(Iterator<BusinessUnit> iterBU =  user.getBusinessUnits().iterator(); iterBU.hasNext(); ) {
                 BusinessUnit businessUnit = iterBU.next();
@@ -117,15 +112,8 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final UserBusinessUnitDTO resource) {
 
-        // createInternal(resource);
-        // add relationship
-
-        // extract user id
         Long userId = resource.getUser_id();
-        // extract business unit id
         Integer businessUnitId = resource.getBusiness_unit_id();
-
-        // retrieve user and business unit from db, if either is null
         User user = userService.findOne(userId);
         BusinessUnit businessUnit = businessUnitService.findOne(businessUnitId);
 
@@ -167,13 +155,9 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("id") final Long id, @RequestBody final UserBusinessUnitDTO resource) {
-        //updateInternal(id, resource);
-        // extract user id
-        Long userId = id;
-        // extract business unit id
-        Integer businessUnitId = resource.getBusiness_unit_id();
 
-        // retrieve user and business unit from db, if either is null
+        Long userId = id;
+        Integer businessUnitId = resource.getBusiness_unit_id();
         User user = userService.findOne(userId);
         BusinessUnit businessUnit = businessUnitService.findOne(businessUnitId);
 
@@ -213,9 +197,7 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") final Long id) {
-       // deleteByIdInternal(id);
-        // will need to throw conflict
-        // just find the user and delete its business unit association
+
         User user = userService.findOne(id);
         if(user != null){
             user.getBusinessUnits().clear();

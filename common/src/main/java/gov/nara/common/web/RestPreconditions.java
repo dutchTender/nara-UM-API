@@ -47,7 +47,7 @@ public final class RestPreconditions {
      */
     public static <T> T checkNotNull(final T reference, final String message) {
        if (reference == null) {
-           throw new MyResourceNotFoundException(message, new Throwable(""));
+           throw new MyResourceNotFoundException(message, new Throwable(message));
       }
 
 
