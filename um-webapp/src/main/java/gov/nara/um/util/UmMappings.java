@@ -9,6 +9,8 @@ public final class UmMappings {
     public static final String USERS = "users";
 
     public static final String USERS_BUSINESSUNITS = "users/businessunits";
+
+    public static final String BUSINESSUNITS_USERS = "/businessunits/users";
     // discoverability
 
     public static final class Singular {

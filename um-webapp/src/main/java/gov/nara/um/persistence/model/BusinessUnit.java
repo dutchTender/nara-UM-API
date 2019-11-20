@@ -17,15 +17,15 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//@Table(name = "business_unit_catalog", schema = "oif_ods")
-@Table(name = "business_unit_catalog")
+@Table(name = "business_unit_catalog", schema = "oif_ods")
+//@Table(name = "business_unit_catalog")
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Id
     @Column(name = "id")
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
-    //@SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq", allocationSize=1"name
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
+    @SequenceGenerator(name = "bu_seq_gen", sequenceName = "oif_ods.business_unit_seq", allocationSize=1)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     private Integer id;
 
