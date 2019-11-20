@@ -23,7 +23,7 @@ import gov.nara.common.persistence.exception.MyEntityNotFoundException;
 
 // can not enable controller advice at this time
 // it is causing all unit tests to fail
-//@ControllerAdvice
+@ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     public RestResponseEntityExceptionHandler() {
@@ -68,7 +68,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // 404
 
-    /* if we enable this. unit test for the controller will start failing
+    /* if we enable this. unit test for the controller will start failing  */
 
     @ExceptionHandler( {MyResourceNotFoundException.class })
     protected ResponseEntity<Object> handleResourceNotFound(final MyResourceNotFoundException ex, final WebRequest request) {
@@ -76,7 +76,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-     */
+
 
     @ExceptionHandler({ MyEntityNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final MyEntityNotFoundException ex, final WebRequest request) {

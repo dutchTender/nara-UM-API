@@ -43,7 +43,7 @@ public class UserBusinessUnitControllerUnitTest {
 
     // List all unit test
     @Test
-    public final void check_Business_unit_controller_ListAll_200_status_OK() throws Exception {
+    public final void check_userBusiness_unit_controller_ListAll_200_status_OK() throws Exception {
 
         try {
             mvc.perform(get("/users/businessunits")
@@ -59,12 +59,12 @@ public class UserBusinessUnitControllerUnitTest {
 
     //list 1 unit test
     @Test
-    public final void check_Business_unit_controller_ListOne_200_status_OK() throws Exception {
+    public final void check_userBusiness_unit_controller_ListOne_404_status_customException() throws Exception {
 
         try {
             mvc.perform(get("/users/businessunits/1")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(200)).andDo(print());
+                    .andExpect(status().is(404)).andDo(print());
             // A 200 is needed to verify that the url handling works
         }
         catch (Exception ex){
@@ -75,17 +75,17 @@ public class UserBusinessUnitControllerUnitTest {
 
     // add 1 unit test
     @Test
-    public final void check_Business_unit_controller_AddOne_201_status_OK() throws Exception {
+    public final void check_userBusiness_unit_controller_AddOne_400_status_customException() throws Exception {
 
         UserBusinessUnitDTO test_unit = new UserBusinessUnitDTO();
         test_unit.setBusiness_unit_id(1);
-        test_unit.setUser_id(Long.valueOf(2));
+        test_unit.setUser_id(new Long(2));
         ObjectMapper objectMapper = new ObjectMapper();
         String json_payLoad = objectMapper.writeValueAsString(test_unit);
         try {
             mvc.perform(post("/users/businessunits/")
                     .contentType(MediaType.APPLICATION_JSON).content(json_payLoad))
-                    .andExpect(status().is(201)).andDo(print());
+                    .andExpect(status().is(400)).andDo(print());
             // A 201 is needed to verify post request that the url handling works
 
         }
@@ -96,7 +96,7 @@ public class UserBusinessUnitControllerUnitTest {
 
     // update 1 unit test
     @Test
-    public final void check_Business_unit_controller_updateOne_201_status_OK() throws Exception {
+    public final void check_Business_unit_controller_updateOne_400_status_customException() throws Exception {
 
         UserBusinessUnitDTO test_unit = new UserBusinessUnitDTO();
         test_unit.setBusiness_unit_id(1);
@@ -107,7 +107,7 @@ public class UserBusinessUnitControllerUnitTest {
         try {
             mvc.perform(put("/users/businessunits/2")
                     .contentType(MediaType.APPLICATION_JSON).content(json_payLoad))
-                    .andExpect(status().is(201)).andDo(print());
+                    .andExpect(status().is(400)).andDo(print());
             // A 201 is needed to verify post request that the url handling works
 
         }
@@ -124,7 +124,7 @@ public class UserBusinessUnitControllerUnitTest {
         try {
             mvc.perform(delete("/users/businessunits/2")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(204)).andDo(print());
+                    .andExpect(status().is(400)).andDo(print());
             // A 202 is needed to verify delete request that the url handling works
 
         }
