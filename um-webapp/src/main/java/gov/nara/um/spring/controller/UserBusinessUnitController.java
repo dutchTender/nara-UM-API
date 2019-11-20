@@ -3,11 +3,9 @@ package gov.nara.um.spring.controller;
 
 
 import gov.nara.common.persistence.service.ILongRawService;
-import gov.nara.common.util.QueryConstants;
-import gov.nara.common.web.controller.AbstractController;
 import gov.nara.common.web.controller.AbstractLongIdController;
-import gov.nara.common.web.controller.ILongIdSortingController;
-import gov.nara.common.web.controller.ISortingController;
+import gov.nara.common.web.exception.MyBadRequestException;
+import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.User;
 import gov.nara.um.persistence.model.UserBusinessUnitDTO;
@@ -89,13 +87,20 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
         // nothing to extract from the request
         User user = userService.findOne(id);
         // build return list by looping through all users
-        for(Iterator<BusinessUnit> iterBU =  user.getBusinessUnits().iterator(); iterBU.hasNext(); ) {
+        if(user != null){
+            for(Iterator<BusinessUnit> iterBU =  user.getBusinessUnits().iterator(); iterBU.hasNext(); ) {
                 BusinessUnit businessUnit = iterBU.next();
                 UserBusinessUnitDTO userBusinessUnitDTO = new UserBusinessUnitDTO();
                 userBusinessUnitDTO.setBusiness_unit_id(businessUnit.getId());
                 userBusinessUnitDTO.setUser_id(user.getId());
                 returnList.add(userBusinessUnitDTO);
+            }
+
         }
+        else {
+            throw new MyResourceNotFoundException("the resource requested does not exist.");
+        }
+
 
         return returnList;
 
@@ -130,6 +135,15 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
         }
         else {
             // throw custom exception
+            String message = "";
+            if(user == null){
+                message = "user_id ";
+            }
+            else {
+                message= "business_unit_id ";
+            }
+            message += "value is not valid";
+            throw new MyBadRequestException(message);
         }
 
         // throw custom bad request exception
@@ -152,8 +166,40 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") final Long id, @RequestBody final User resource) {
+    public void update(@PathVariable("id") final Long id, @RequestBody final UserBusinessUnitDTO resource) {
         //updateInternal(id, resource);
+        // extract user id
+        Long userId = id;
+        // extract business unit id
+        Integer businessUnitId = resource.getBusiness_unit_id();
+
+        // retrieve user and business unit from db, if either is null
+        User user = userService.findOne(userId);
+        BusinessUnit businessUnit = businessUnitService.findOne(businessUnitId);
+
+        if(user != null && businessUnit != null){
+            // remove existing mapping
+            if(user.getBusinessUnits().size() > 0){
+                user.getBusinessUnits().clear();;
+            }
+            user.addBusinessUnit(businessUnit);
+            userService.update(user);
+        }
+        else {
+            // throw custom exception
+            String message = "";
+            if(user == null){
+                message = "user_id ";
+            }
+            else {
+                message= "business_unit_id ";
+            }
+            message += "value in the API payload is not valid.";
+            throw new MyBadRequestException(message);
+        }
+
+
+
     }
 
 
@@ -168,6 +214,16 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") final Long id) {
        // deleteByIdInternal(id);
+        // will need to throw conflict
+        // just find the user and delete its business unit association
+        User user = userService.findOne(id);
+        if(user != null){
+            user.getBusinessUnits().clear();
+            userService.update(user);
+        }
+        else {
+            throw new MyBadRequestException("user id value provided in the API path was not valid.");
+        }
     }
 
 
