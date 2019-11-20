@@ -24,7 +24,7 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     @Id
     @Column(name = "id")
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
-    //@SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq", allocationSize=1)
+    //@SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq", allocationSize=1"name
     @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     private Integer id;
