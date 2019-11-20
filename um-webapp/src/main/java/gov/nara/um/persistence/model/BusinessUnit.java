@@ -23,7 +23,7 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_seq_gen")
-    @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq")
+    @SequenceGenerator(name = "bu_seq_gen", sequenceName = "business_unit_seq", allocationSize=1)
     @ApiModelProperty(hidden = true)
     private Integer id;
 
@@ -49,9 +49,8 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Override
     public String getName() {
-       String returnValue = name;
-
-       return returnValue;
+        String returnValue = name;
+        return returnValue;
     }
 
     public void setName(String name) {

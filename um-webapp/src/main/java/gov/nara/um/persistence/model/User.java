@@ -24,7 +24,7 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
-    @SequenceGenerator(name = "user_seq_gen", sequenceName = "oif_ods.user_user_id_seq")
+    @SequenceGenerator(name = "user_seq_gen", sequenceName = "oif_ods.user_user_id_seq", allocationSize=1)
     @ApiModelProperty(hidden = true)
     private Long id;
 
@@ -71,7 +71,7 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     public void setId(Long id) { this.id = id; }
 
     @Override
-    public Long getId() { return Long.valueOf(id); }
+    public Long getId() { return this.id; }
 
 
     @Override
