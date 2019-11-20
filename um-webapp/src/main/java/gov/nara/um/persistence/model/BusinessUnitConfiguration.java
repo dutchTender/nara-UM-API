@@ -20,7 +20,7 @@ import javax.persistence.*;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "business_unit_configuration", schema = "oif_ods")
-public class BussinessUnitConfiguration implements ILongNameableEntity, ILongNameableDto {
+public class BusinessUnitConfiguration implements ILongNameableEntity, ILongNameableDto {
 
 
 
@@ -34,6 +34,9 @@ public class BussinessUnitConfiguration implements ILongNameableEntity, ILongNam
 
     @Column(name = "configuration_name", unique = true, nullable = false)
     private String name;
+
+
+
 
 
 

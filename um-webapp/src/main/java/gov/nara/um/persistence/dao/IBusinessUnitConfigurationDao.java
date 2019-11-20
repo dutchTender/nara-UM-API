@@ -1,12 +1,12 @@
 package gov.nara.um.persistence.dao;
 
 import gov.nara.common.interfaces.IByNameApi;
-import gov.nara.um.persistence.model.BussinessUnitConfiguration;
+import gov.nara.um.persistence.model.BusinessUnitConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface IBusinessUnitConfigurationDao extends JpaRepository<BussinessUnitConfiguration, Long>, JpaSpecificationExecutor<BussinessUnitConfiguration>, IByNameApi<BussinessUnitConfiguration> {
+public interface IBusinessUnitConfigurationDao extends JpaRepository<BusinessUnitConfiguration, Long>, JpaSpecificationExecutor<BusinessUnitConfiguration>, IByNameApi<BusinessUnitConfiguration> {
 
 
-    public BussinessUnitConfiguration  findByName(String name);
+    public BusinessUnitConfiguration findByName(String name);
 }

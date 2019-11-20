@@ -88,7 +88,11 @@ public class User implements ILongNameableEntity, ILongNameableDto {
         this.user_type = user_type;
     }
 
-    public Long getBusinessunit_id() { return businessunit_id; }
+    public Long getBusinessunit_id() {
+        return businessunit_id;
+    }
 
-    public void setBusinessunit_id(Long businessunit_id) { this.businessunit_id = businessunit_id; }
+    public void setBusinessunit_id(Long businessunit_id) {
+        this.businessunit_id = businessunit_id;
+    }
 }

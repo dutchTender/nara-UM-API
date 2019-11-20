@@ -2,13 +2,17 @@ package gov.nara.um.service.impl;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
 import gov.nara.um.persistence.dao.IBusinessUnitConfigurationDao;
-import gov.nara.um.persistence.model.BussinessUnitConfiguration;
+import gov.nara.um.persistence.model.BusinessUnitConfiguration;
 
+import gov.nara.um.service.IBusinessUnitConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
-public class BusinessUnitConfigurationServiceImpl extends AbstractLongIdService<BussinessUnitConfiguration>  {
+@Service
+@Transactional
+public class BusinessUnitConfigurationServiceImpl extends AbstractLongIdService<BusinessUnitConfiguration> implements IBusinessUnitConfigurationService {
 
     @Autowired
     private IBusinessUnitConfigurationDao dao;
@@ -16,7 +20,7 @@ public class BusinessUnitConfigurationServiceImpl extends AbstractLongIdService<
     public BusinessUnitConfigurationServiceImpl() { super(); }
 
     @Override
-    public BussinessUnitConfiguration findByName(String name) {
+    public BusinessUnitConfiguration findByName(String name) {
         return dao.findByName(name);
     }
 
@@ -27,8 +31,11 @@ public class BusinessUnitConfigurationServiceImpl extends AbstractLongIdService<
     }
 
     @Override
-    protected JpaSpecificationExecutor<BussinessUnitConfiguration> getSpecificationExecutor() {
+    protected JpaSpecificationExecutor<BusinessUnitConfiguration> getSpecificationExecutor() {
         return dao;
     }
+
+
+
 }
 

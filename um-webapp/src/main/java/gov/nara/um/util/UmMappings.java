@@ -11,6 +11,9 @@ public final class UmMappings {
     public static final String USERS_BUSINESSUNITS = "users/businessunits";
 
     public static final String BUSINESSUNITS_USERS = "/businessunits/users";
+
+
+    public static final String BUSINESSUNITS_CONFIGURATIONS = "/businessunits/businessunits_configurations";
     // discoverability
 
     public static final class Singular {
