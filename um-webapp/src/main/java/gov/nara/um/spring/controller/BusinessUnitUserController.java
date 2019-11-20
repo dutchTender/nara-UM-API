@@ -72,11 +72,9 @@ public class BusinessUnitUserController extends AbstractLongIdController<User>  
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<User> findOne(@PathVariable("id") final Long id) {
-
         // return all users that belongs to a business unit
         List<User> returnList = new ArrayList<User>();
         BusinessUnit businessUnit = businessUnitService.findOne(id.intValue());
-
         List<User>  userList = userService.findAll();
         // build return list by looping through all users
         if(businessUnit != null) {
