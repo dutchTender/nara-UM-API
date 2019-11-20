@@ -18,7 +18,6 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "user", schema = "oif_ods")
-//@Table(name = "user")
 public class User implements ILongNameableEntity, ILongNameableDto {
 
 
@@ -52,36 +51,27 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     @OneToMany
     private Set<BusinessUnit> businessUnits;
 
+
+
+
+
     public Set<BusinessUnit> getBusinessUnits() {
         return businessUnits;
     }
 
-    public BusinessUnit addBusinessUnit(BusinessUnit businessUnit){
+    public BusinessUnit addBusinessUnit(BusinessUnit businessUnit){ businessUnits.add(businessUnit);return businessUnit; }
 
-        businessUnits.add(businessUnit);
-        return businessUnit;
-
-    }
-
-    public void removeBusinessUnit(BusinessUnit businessUnit){
-
-        businessUnits.remove(businessUnit);
-    }
-
+    public void removeBusinessUnit(BusinessUnit businessUnit){ businessUnits.remove(businessUnit); }
 
     public void setBusinessUnits(Set<BusinessUnit> businessUnits) {
         this.businessUnits = businessUnits;
     }
 
     @Override
-    public void setId(Long id) {
-
-    }
+    public void setId(Long id) { this.id = id; }
 
     @Override
-    public Long getId() {
-        return Long.valueOf(id);
-    }
+    public Long getId() { return Long.valueOf(id); }
 
 
     @Override
@@ -101,11 +91,7 @@ public class User implements ILongNameableEntity, ILongNameableDto {
         this.user_type = user_type;
     }
 
-    public Long getBusinessunit_id() {
-        return businessunit_id;
-    }
+    public Long getBusinessunit_id() { return businessunit_id; }
 
-    public void setBusinessunit_id(Long businessunit_id) {
-        this.businessunit_id = businessunit_id;
-    }
+    public void setBusinessunit_id(Long businessunit_id) { this.businessunit_id = businessunit_id; }
 }

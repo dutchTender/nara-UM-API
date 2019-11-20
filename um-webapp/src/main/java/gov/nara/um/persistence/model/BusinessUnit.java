@@ -18,7 +18,6 @@ import javax.persistence.*;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "business_unit_catalog", schema = "oif_ods")
-//@Table(name = "business_unit_catalog")   /*annotation for embeded h2 db   */
 public class BusinessUnit  implements INameableEntity, INameableDto {
 
     @Id
