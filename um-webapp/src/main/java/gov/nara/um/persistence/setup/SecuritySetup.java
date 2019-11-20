@@ -55,30 +55,7 @@ public class SecuritySetup implements ApplicationListener<ContextRefreshedEvent>
         if (!setupDone) {
             logger.info("Executing Setup");
 
-            //createPrivileges();
-            //createRoles();
-            //createUsers();
-
-            User user = new User();
-            user.setName("Li.zhang");
-            user.setUser_type("ERA");
-
-            iUserService.create(user);
-
-            BusinessUnit businessUnit = new BusinessUnit();
-            businessUnit.setName("ADIS");
-            businessUnit.setOrg_code("NARA");
-            businessUnit.setLdapName("ADIS");
-            iBusinessUnitService.create(businessUnit);
-
-
-
-            User user2 = iUserService.findByName(user.getName());
-
-
-            user2.addBusinessUnit(businessUnit);
-            iUserService.update(user2);
-
+             CrateUser();
 
 
 
@@ -90,7 +67,30 @@ public class SecuritySetup implements ApplicationListener<ContextRefreshedEvent>
 
     // Privilege
 
+    private void CrateUser(){
 
+        User user = new User();
+        user.setName("Li.zhang");
+        user.setUser_type("ERA");
+
+        iUserService.create(user);
+
+        BusinessUnit businessUnit = new BusinessUnit();
+        businessUnit.setName("ADIS");
+        businessUnit.setOrg_code("NARA");
+        businessUnit.setLdapName("ADIS");
+        iBusinessUnitService.create(businessUnit);
+
+
+
+        User user2 = iUserService.findByName(user.getName());
+
+
+        user2.addBusinessUnit(businessUnit);
+        iUserService.update(user2);
+
+
+    }
 
     // Role
 

@@ -112,13 +112,36 @@ public class UserBusinessUnitController extends AbstractLongIdController<User>  
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final UserBusinessUnitDTO resource) {
 
-       // createInternal(resource);
-       // add relationship
+        // createInternal(resource);
+        // add relationship
 
+        // extract user id
+        Long userId = resource.getUser_id();
+        // extract business unit id
+        Integer businessUnitId = resource.getBusiness_unit_id();
+
+        // retrieve user and business unit from db, if either is null
+        User user = userService.findOne(userId);
+        BusinessUnit businessUnit = businessUnitService.findOne(businessUnitId);
+
+        if(user != null && businessUnit != null){
+            user.addBusinessUnit(businessUnit);
+            userService.update(user);
+        }
+        else {
+            // throw custom exception
+        }
+
+        // throw custom bad request exception
 
 
 
     }
+
+
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API

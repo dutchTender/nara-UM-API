@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-@ComponentScan({"gov.nara.um.spring.controller.web"})
+@ComponentScan({"gov.nara.um.spring.controller"})
 @EnableWebMvc
 @EnableSwagger2
 public class UmWebConfig implements WebMvcConfigurer {
@@ -35,16 +35,12 @@ public class UmWebConfig implements WebMvcConfigurer {
     public Docket swagConfig(){ // @formatter:off
         return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-
                 .build()
                 .pathMapping("/api")
                 .directModelSubstitute(LocalDate.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
                 ;
     }// @formatter:on
-
-
-
 
 
     // custom http message converter
@@ -56,7 +52,6 @@ public class UmWebConfig implements WebMvcConfigurer {
         final Optional<HttpMessageConverter<?>> converterFound = converters.stream()
                 .filter(c -> c instanceof AbstractJackson2HttpMessageConverter)
                 .findFirst();
-
 
         if (converterFound.isPresent()) {
             final AbstractJackson2HttpMessageConverter converter = (AbstractJackson2HttpMessageConverter) converterFound.get();
