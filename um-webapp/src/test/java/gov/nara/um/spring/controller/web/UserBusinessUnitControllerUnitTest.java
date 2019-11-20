@@ -1,7 +1,6 @@
 package gov.nara.um.spring.controller.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.UserBusinessUnitDTO;
 import gov.nara.um.service.IBusinessUnitService;
 
@@ -18,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;
-
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
