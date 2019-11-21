@@ -26,7 +26,6 @@ import java.util.List;
 public class BusinessUnitConfiguration implements ILongNameableEntity, ILongNameableDto {
 
 
-
     @Id
     @Column(name = "configuration_id")
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_conf_seq_gen")
@@ -41,11 +40,11 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
 
 
     @OneToMany(
-            mappedBy = "businessUnitConfiguration",
+            mappedBy = "businessUnitConfigID",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<BusinessUnitConfigurationPreference> posts = new ArrayList<>();
+    private List<BusinessUnitConfigurationPreference> preferences = new ArrayList<>();
 
 
 
@@ -66,5 +65,13 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<BusinessUnitConfigurationPreference> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(List<BusinessUnitConfigurationPreference> preferences) {
+        this.preferences = preferences;
     }
 }

@@ -1,6 +1,7 @@
 package gov.nara.um.persistence.model;
 
 
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,50 +11,28 @@ import java.util.Objects;
 public class BusinessUnitConfigurationPreference {
 
     @EmbeddedId
-    private BusinessUnitConfigurationID businessUnitPreferenceID;
+    private BusinessUnitConfigurationID id = new BusinessUnitConfigurationID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("businessUnitID")
     @JoinColumn(name="business_unit_catalog_id", nullable=false)
-    private BusinessUnit businessUnit;
+    private BusinessUnit businessUnitID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("businessUnitConfigID")
     @JoinColumn(name="business_unit_config_id", nullable=false)
-    private BusinessUnitConfiguration businessUnitConfiguration;
+    private BusinessUnitConfiguration businessUnitConfigID;
 
 
     @Column(name = "configuration_value")
     private String configurationValue;
 
-
-    public BusinessUnitConfigurationPreference(BusinessUnit businessUnit, BusinessUnitConfiguration businessUnitConfiguration) {
-        this.businessUnit = businessUnit;
-        this.businessUnitConfiguration = businessUnitConfiguration;
+    public BusinessUnitConfigurationPreference() {
     }
 
-    public BusinessUnitConfigurationID getBusinessUnitPreferenceID() {
-        return businessUnitPreferenceID;
-    }
-
-    public void setBusinessUnitPreferenceID(BusinessUnitConfigurationID businessUnitPreferenceID) {
-        this.businessUnitPreferenceID = businessUnitPreferenceID;
-    }
-
-    public BusinessUnit getBusinessUnit() {
-        return businessUnit;
-    }
-
-    public void setBusinessUnit(BusinessUnit businessUnit) {
-        this.businessUnit = businessUnit;
-    }
-
-    public BusinessUnitConfiguration getBusinessUnitConfiguration() {
-        return businessUnitConfiguration;
-    }
-
-    public void setBusinessUnitConfiguration(BusinessUnitConfiguration businessUnitConfiguration) {
-        this.businessUnitConfiguration = businessUnitConfiguration;
+    public BusinessUnitConfigurationPreference(BusinessUnit businessUnitID, BusinessUnitConfiguration businessUnitConfigID) {
+        this.businessUnitID = businessUnitID;
+        this.businessUnitConfigID = businessUnitConfigID;
     }
 
     public String getConfigurationValue() {
@@ -64,19 +43,34 @@ public class BusinessUnitConfigurationPreference {
         this.configurationValue = configurationValue;
     }
 
+    public BusinessUnit getBusinessUnitID() {
+        return businessUnitID;
+    }
+
+    public void setBusinessUnitID(BusinessUnit businessUnitID) {
+        this.businessUnitID = businessUnitID;
+    }
+
+    public BusinessUnitConfiguration getBusinessUnitConfigID() {
+        return businessUnitConfigID;
+    }
+
+    public void setBusinessUnitConfigID(BusinessUnitConfiguration businessUnitConfigID) {
+        this.businessUnitConfigID = businessUnitConfigID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BusinessUnitConfigurationPreference)) return false;
         BusinessUnitConfigurationPreference that = (BusinessUnitConfigurationPreference) o;
-        return Objects.equals(getBusinessUnitPreferenceID(), that.getBusinessUnitPreferenceID()) &&
-                getBusinessUnit().equals(that.getBusinessUnit()) &&
-                getBusinessUnitConfiguration().equals(that.getBusinessUnitConfiguration()) &&
+        return getBusinessUnitID().equals(that.getBusinessUnitID()) &&
+                getBusinessUnitConfigID().equals(that.getBusinessUnitConfigID()) &&
                 Objects.equals(getConfigurationValue(), that.getConfigurationValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getBusinessUnitPreferenceID(), getBusinessUnit(), getBusinessUnitConfiguration(), getConfigurationValue());
+        return Objects.hash(getBusinessUnitID(), getBusinessUnitConfigID(), getConfigurationValue());
     }
 }

@@ -1,6 +1,7 @@
 package gov.nara.um.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gov.nara.common.interfaces.INameableDto;
 import gov.nara.common.persistence.model.INameableEntity;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -40,13 +42,28 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
     private String ldapName;
 
 
-
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(
-            mappedBy = "businessUnit",
+            mappedBy = "businessUnitID",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<BusinessUnitConfigurationPreference> posts = new ArrayList<>();
+    private List<BusinessUnitConfigurationPreference> businessUnitConfigurationPreferences = new ArrayList<>();
+
+
+    public BusinessUnitConfigurationPreference addBusinessUnitConfigurationPreference(BusinessUnitConfigurationPreference businessUnitConfigurationPreference){
+        businessUnitConfigurationPreferences.add(businessUnitConfigurationPreference);
+        return  businessUnitConfigurationPreference;
+    }
+
+    public void removeBusinessUnitConfigurationPreference( BusinessUnitConfigurationPreference businessUnitConfigurationPreference){
+        for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnitConfigurationPreferences.iterator(); iterBUCP.hasNext(); ) {
+            BusinessUnitConfigurationPreference current = iterBUCP.next();
+            if(current.equals(businessUnitConfigurationPreference)){
+                iterBUCP.remove();
+            }
+        }
+    }
 
 
 
@@ -88,7 +105,11 @@ public class BusinessUnit  implements INameableEntity, INameableDto {
         this.ldapName = ldapName;
     }
 
+    public List<BusinessUnitConfigurationPreference> getBusinessUnitConfigurationPreferences() {
+        return businessUnitConfigurationPreferences;
+    }
 
-
-
+    public void setBusinessUnitConfigurationPreferences(List<BusinessUnitConfigurationPreference> businessUnitConfigurationPreferences) {
+        this.businessUnitConfigurationPreferences = businessUnitConfigurationPreferences;
+    }
 }

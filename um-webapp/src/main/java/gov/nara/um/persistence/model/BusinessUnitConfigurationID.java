@@ -20,6 +20,7 @@ public class BusinessUnitConfigurationID implements Serializable {
     public BusinessUnitConfigurationID() {
     }
 
+
     public Integer getBusinessUnitID() {
         return businessUnitID;
     }
