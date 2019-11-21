@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-//@Table(name = "business_unit_config_values", schema = "oif_ods")
-@Table(name = "business_unit_config_values")
+@Table(name = "business_unit_config_values", schema = "oif_ods")
+//@Table(name = "business_unit_config_values")
 public class BusinessUnitConfigurationPreference {
 
     @EmbeddedId
