@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -19,16 +21,17 @@ import javax.persistence.*;
 @Getter
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@Table(name = "business_unit_configuration", schema = "oif_ods")
+//@Table(name = "business_unit_configuration", schema = "oif_ods")
+@Table(name = "business_unit_configuration")
 public class BusinessUnitConfiguration implements ILongNameableEntity, ILongNameableDto {
 
 
 
     @Id
     @Column(name = "configuration_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_conf_seq_gen")
-    @SequenceGenerator(name = "bu_conf_seq_gen", sequenceName = "oif_ods.business_unit_configuration_configuration_id_seq", allocationSize=1)
-    // @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_conf_seq_gen")
+    //@SequenceGenerator(name = "bu_conf_seq_gen", sequenceName = "oif_ods.business_unit_configuration_configuration_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     private Long id;
 
@@ -37,6 +40,12 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
 
 
 
+    @OneToMany(
+            mappedBy = "businessUnitConfiguration",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<BusinessUnitConfigurationPreference> posts = new ArrayList<>();
 
 
 

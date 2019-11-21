@@ -17,16 +17,16 @@ import java.util.Set;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-@Table(name = "user", schema = "oif_ods")
-//@Table(name = "user")
+//@Table(name = "user", schema = "oif_ods")
+@Table(name = "user")
 public class User implements ILongNameableEntity, ILongNameableDto {
 
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
-    @SequenceGenerator(name = "user_seq_gen", sequenceName = "oif_ods.user_user_id_seq", allocationSize=1)
-   // @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
+    //@SequenceGenerator(name = "user_seq_gen", sequenceName = "oif_ods.user_user_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @ApiModelProperty(hidden = true)
     private Long id;
 
