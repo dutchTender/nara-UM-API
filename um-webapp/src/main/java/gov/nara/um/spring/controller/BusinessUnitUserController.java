@@ -4,16 +4,13 @@ package gov.nara.um.spring.controller;
 
 import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.web.controller.AbstractLongIdController;
-import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.User;
-import gov.nara.um.persistence.model.UserBusinessUnitDTO;
 import gov.nara.um.service.IBusinessUnitService;
 import gov.nara.um.service.IUserService;
 import gov.nara.um.util.UmMappings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 
 @Controller

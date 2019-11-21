@@ -8,7 +8,7 @@ import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.User;
-import gov.nara.um.persistence.model.UserBusinessUnitDTO;
+import gov.nara.um.persistence.dto.UserBusinessUnitDTO;
 import gov.nara.um.service.IBusinessUnitService;
 import gov.nara.um.service.IUserService;
 import gov.nara.um.util.UmMappings;

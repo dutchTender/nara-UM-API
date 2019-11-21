@@ -1,7 +1,7 @@
 package gov.nara.um.spring.controller.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nara.um.persistence.model.UserBusinessUnitDTO;
+import gov.nara.um.persistence.dto.UserBusinessUnitDTO;
 import gov.nara.um.service.IBusinessUnitService;
 
 import gov.nara.um.service.IUserService;

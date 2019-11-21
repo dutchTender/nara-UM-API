@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.model;
+package gov.nara.um.persistence.dto;
 
 public class BusinessUnitDTO {
 
