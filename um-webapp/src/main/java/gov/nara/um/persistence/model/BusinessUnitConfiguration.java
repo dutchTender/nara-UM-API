@@ -39,12 +39,7 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
 
 
 
-    @OneToMany(
-            mappedBy = "businessUnitConfigID",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<BusinessUnitConfigurationPreference> preferences = new ArrayList<>();
+
 
 
 
@@ -67,11 +62,5 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
         this.id = id;
     }
 
-    public List<BusinessUnitConfigurationPreference> getPreferences() {
-        return preferences;
-    }
 
-    public void setPreferences(List<BusinessUnitConfigurationPreference> preferences) {
-        this.preferences = preferences;
-    }
 }
