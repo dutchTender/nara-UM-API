@@ -66,17 +66,10 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
         for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-            businessUnitDTO.setId(currentBU.getId());
-            businessUnitDTO.setName(currentBU.getName());
-            businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-            businessUnitDTO.setLdapName(currentBU.getLdapName());
+            BusinessUnitDTO businessUnitDTO =buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-                businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
-                businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
-                businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
                 businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
             returnList.add(businessUnitDTO);
@@ -108,17 +101,10 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
         for(Iterator<BusinessUnit> iterBU = findAllSortedInternal(sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-            businessUnitDTO.setId(currentBU.getId());
-            businessUnitDTO.setName(currentBU.getName());
-            businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-            businessUnitDTO.setLdapName(currentBU.getLdapName());
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-                businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
-                businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
-                businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
                 businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
             returnList.add(businessUnitDTO);
@@ -151,17 +137,10 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
         for(Iterator<BusinessUnit> iterBU = findAllInternal(request).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-            businessUnitDTO.setId(currentBU.getId());
-            businessUnitDTO.setName(currentBU.getName());
-            businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-            businessUnitDTO.setLdapName(currentBU.getLdapName());
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-                businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
-                businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
-                businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO( currentBUCP);
                 businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
             returnList.add(businessUnitDTO);
@@ -184,17 +163,10 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     public BusinessUnitDTO findOne(@PathVariable("id") final Integer id) {
 
         BusinessUnit currentBU = findOneInternal(id);
-        BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-        businessUnitDTO.setId(currentBU.getId());
-        businessUnitDTO.setName(currentBU.getName());
-        businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-        businessUnitDTO.setLdapName(currentBU.getLdapName());
+        BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
         for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
             BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-            businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
-            businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
-            businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
+            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
             businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
         }
 
@@ -252,5 +224,28 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     protected final IBusinessUnitService getService() {
         return service;
     }
+
+
+    // private helpers
+
+    private BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
+        BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
+        businessUnitDTO.setId(currentBU.getId());
+        businessUnitDTO.setName(currentBU.getName());
+        businessUnitDTO.setOrg_code(currentBU.getOrg_code());
+        businessUnitDTO.setLdapName(currentBU.getLdapName());
+
+        return businessUnitDTO;
+    }
+
+    private BusinessUnitConfigPreferenceDTO buildBusinessConfigPreferenceDTO(BusinessUnitConfigurationPreference currentBUCP){
+        BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
+        businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
+        businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
+        businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
+        return businessUnitConfigPreferenceDTO;
+    }
+
+
 
 }
