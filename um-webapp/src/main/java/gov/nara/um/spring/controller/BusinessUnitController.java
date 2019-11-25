@@ -250,12 +250,19 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         // name has to be unique
 
 
+        // verify that the name field is unique
+
+
+
 
         // assumes DTO is valid
         // build business unit object
 
 
         BusinessUnit businessUnit = service.findOne(id);
+
+
+
         businessUnit.setName(resource.getName());
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdapName());
