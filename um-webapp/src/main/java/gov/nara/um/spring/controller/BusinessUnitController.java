@@ -216,9 +216,6 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
         if(prefList.size() > 0){ // we may force this size to be 1
             BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
-            if(currentBU == null){
-                throw  new MyResourceNotFoundException("Business unit could not be found. could not attach preference.");
-            }
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
                 BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
@@ -241,8 +238,41 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnit resource) {
-        updateInternal(id, resource);
+    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitDTO resource) {
+
+
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+
+
+
+        // assumes DTO is valid
+        // build business unit object
+
+
+        BusinessUnit businessUnit = service.findOne(resource.getId());
+        businessUnit.setName(resource.getName());
+        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setLdapName(resource.getLdapName());
+
+
+        // business unit preference is required ....can be empty
+        // if preference is not null in the DTO
+        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
+        if(prefList.size() > 0){ // we may force this size to be 1
+
+            for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
+                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
+                businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
+                businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
+                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+            }
+            service.update(businessUnit);
+        }
     }
 
 
