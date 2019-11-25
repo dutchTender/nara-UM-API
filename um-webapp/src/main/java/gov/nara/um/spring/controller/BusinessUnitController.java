@@ -3,6 +3,7 @@ package gov.nara.um.spring.controller;
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.AbstractController;
 import gov.nara.common.web.controller.ISortingController;
+import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
@@ -214,6 +215,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         // business unit preference is required ....can be empty
         // if preference is not null in the DTO
         List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
+
         if(prefList.size() > 0){ // we may force this size to be 1
             BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
@@ -258,24 +260,86 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdapName());
 
+        //businessUnit.getBusinessUnitConfigurationPreferences().clear();
+        //service.update(businessUnit);
+
 
         // business unit preference is required ....can be empty
         // if preference is not null in the DTO
-        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
-        if(prefList.size() > 0){ // we may force this size to be 1
 
+
+        // associations can not be updated in this way via ids
+        // only updates allowed here is to update the configuration values
+        List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusinessUnitConfigPreferences();
+
+
+        List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
+        if(prefListDTO.size() > 0) { // input preferences is not null
+
+            if(preferencesList.size() > 0){  // existing preferences is not empty
+
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                    BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
+                    Integer bucpIndex = 0;
+                    Integer currentPreferenceSize = businessUnit.getBusinessUnitConfigurationPreferences().size();
+                    for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                        // check if preferences that needs update
+
+                        if(bucpIndex <= currentPreferenceSize){
+                            // verify that the DTO ids match the actual object
+                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = iterBUCP.next();
+
+                            // business unit ids is implicitly supplied ..only need to verify config idp
+                            if(businessUnitConfigurationPreference.getBusinessUnitConfigID().getId() == businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()){
+                                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                                businessUnit.getBusinessUnitConfigurationPreferences().set(bucpIndex, businessUnitConfigurationPreference);
+                            }
+                            else{
+                                throw new MyBadRequestException("only configuration value is allowed to be updated. not the configuration id key");
+                            }
+
+                        }
+                        else {
+
+                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
+                            businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
+                            businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
+                            businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                            businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+
+                        }
+
+                        bucpIndex++;
+
+
+                    }
+
+                }
+            }
+            else {
+                // existing preferences empty. just need to add new preferences
+                // create busienss preference and add it to business unit
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                    BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
+                    BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
+                    businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
+                    businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
+                    businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                    businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+                }
+
+            }
+
+            service.update(businessUnit);
+
+        }
+        else {
             businessUnit.getBusinessUnitConfigurationPreferences().clear();
             service.update(businessUnit);
-            for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
-                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-                businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-                businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
-                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
-                businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-            }
-            service.update(businessUnit);
         }
+
+
+
     }
 
 
