@@ -3,10 +3,13 @@ package gov.nara.um.spring.controller;
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.AbstractController;
 import gov.nara.common.web.controller.ISortingController;
+import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.BusinessUnit;
+import gov.nara.um.persistence.model.BusinessUnitConfiguration;
 import gov.nara.um.persistence.model.BusinessUnitConfigurationPreference;
+import gov.nara.um.service.IBusinessUnitConfigurationService;
 import gov.nara.um.service.IBusinessUnitService;
 import gov.nara.um.util.UmMappings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +32,11 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
     @Autowired
     private IBusinessUnitService service;
+
+
+    @Autowired
+    private IBusinessUnitConfigurationService configurationService;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -123,7 +132,6 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
-
     public List<BusinessUnit> findAll(final HttpServletRequest request) {
         return findAllInternal(request);
     }
@@ -180,11 +188,48 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final BusinessUnit resource) {
+    @Transactional
+    public void create(@RequestBody final BusinessUnitDTO resource) {
 
-        createInternal(resource);
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+
+
+
+        // assumes DTO is valid
+        // build business unit object
+        BusinessUnit businessUnit = new BusinessUnit();
+        businessUnit.setName(resource.getName());
+        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setLdapName(resource.getLdapName());
+        createInternal(businessUnit);
+
+        // business unit preference is required ....can be empty
+        // if preference is not null in the DTO
+        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
+        if(prefList.size() > 0){ // we may force this size to be 1
+            BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
+            if(currentBU == null){
+                throw  new MyResourceNotFoundException("Business unit could not be found. could not attach preference.");
+            }
+            for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
+                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
+                businessUnitConfigurationPreference.setBusinessUnitID(currentBU);
+                businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
+                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+            }
+            service.update(currentBU);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

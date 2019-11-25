@@ -1,6 +1,7 @@
 package gov.nara.um.persistence.dto;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,11 @@ public class BusinessUnitDTO {
 
 
     private Integer Id;
+
     private String name;
+
     private String org_code;
+
     private String ldapName;
 
     private List<BusinessUnitConfigPreferenceDTO> businessUnitConfigPreferences = new ArrayList<>();
