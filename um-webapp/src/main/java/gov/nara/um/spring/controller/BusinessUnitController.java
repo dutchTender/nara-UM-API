@@ -238,6 +238,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitDTO resource) {
 
 
@@ -252,7 +253,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         // build business unit object
 
 
-        BusinessUnit businessUnit = service.findOne(resource.getId());
+        BusinessUnit businessUnit = service.findOne(id);
         businessUnit.setName(resource.getName());
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdapName());
@@ -263,6 +264,8 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
         if(prefList.size() > 0){ // we may force this size to be 1
 
+            businessUnit.getBusinessUnitConfigurationPreferences().clear();
+            service.update(businessUnit);
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
                 BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
