@@ -4,6 +4,7 @@ import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.AbstractController;
 import gov.nara.common.web.controller.ISortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
+import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
@@ -29,14 +30,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS)
-public class BusinessUnitController extends AbstractController<BusinessUnit> implements ISortingController<BusinessUnit> {
+public class BusinessUnitController extends BusinessUnitBaseController    implements ISortingController<BusinessUnit> {
 
     @Autowired
     private IBusinessUnitService service;
 
-
-    @Autowired
-    private IBusinessUnitConfigurationService configurationService;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +74,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
         for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO =buildBusinessUnitDTO(currentBU);
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
                 BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
@@ -202,7 +200,11 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
         // name has to be there
         // name has to be unique
 
-
+        // verify that they new name does not clash with existing business unit names
+        BusinessUnit uniqueUnit = service.findByName(resource.getName());
+        if(uniqueUnit != null){
+            throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
+        }
 
         // assumes DTO is valid
         // build business unit object
@@ -220,10 +222,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
             BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
-                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-                businessUnitConfigurationPreference.setBusinessUnitID(currentBU);
-                businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
-                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                 currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
             }
             service.update(currentBU);
@@ -251,35 +250,26 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
 
         // verify that the name field is unique
-
-
-
-
-        // assumes DTO is valid
-        // build business unit object
+        // verify that they new name does not clash with existing business unit names
+        BusinessUnit uniqueUnit = service.findByName(resource.getName());
+        if(uniqueUnit.getId() != id){
+            throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
+        }
 
 
         BusinessUnit businessUnit = service.findOne(id);
+        if(businessUnit == null){
+            throw new MyBadRequestException("provided path id variable is not valid. Bad Request exception.");
+        }
 
 
-
+        // assumes DTO is valid when execution reaches here
+        // build business unit object
         businessUnit.setName(resource.getName());
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdapName());
 
-        //businessUnit.getBusinessUnitConfigurationPreferences().clear();
-        //service.update(businessUnit);
-
-
-        // business unit preference is required ....can be empty
-        // if preference is not null in the DTO
-
-
-        // associations can not be updated in this way via ids
-        // only updates allowed here is to update the configuration values
         List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusinessUnitConfigPreferences();
-
-
         List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
         if(prefListDTO.size() > 0) { // input preferences is not null
 
@@ -308,10 +298,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
                         }
                         else {
 
-                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-                            businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-                            businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
-                            businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                             businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
 
                         }
@@ -328,10 +315,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
                 // create busienss preference and add it to business unit
                 for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
                     BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
-                    BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-                    businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-                    businessUnitConfigurationPreference.setBusinessUnitConfigID(configurationService.findOne(businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()));
-                    businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                    BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                     businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
                 }
 
@@ -377,23 +361,7 @@ public class BusinessUnitController extends AbstractController<BusinessUnit> imp
 
     // private helpers
 
-    private BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
-        BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-        businessUnitDTO.setId(currentBU.getId());
-        businessUnitDTO.setName(currentBU.getName());
-        businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-        businessUnitDTO.setLdapName(currentBU.getLdapName());
 
-        return businessUnitDTO;
-    }
-
-    private BusinessUnitConfigPreferenceDTO buildBusinessConfigPreferenceDTO(BusinessUnitConfigurationPreference currentBUCP){
-        BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-        businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
-        businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
-        businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
-        return businessUnitConfigPreferenceDTO;
-    }
 
 
 
