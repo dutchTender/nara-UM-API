@@ -2,18 +2,12 @@ package gov.nara.um.spring.controller;
 
 
 
-import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.util.QueryConstants;
-import gov.nara.common.web.controller.AbstractLongIdController;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
-import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.UserDTO;
 import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.User;
-import gov.nara.um.service.IBusinessUnitService;
-import gov.nara.um.service.IUserService;
 import gov.nara.um.util.UmMappings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +19,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS_USERS)
-public class BusinessUnitUserController extends AbstractLongIdController<User>  {
+public class BusinessUnitUserController extends UserBaseController  {
 
-    @Autowired
-    private IUserService userService;
 
-    @Autowired
-    private IBusinessUnitService businessUnitService;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +77,7 @@ public class BusinessUnitUserController extends AbstractLongIdController<User>  
         // return all users that belongs to any business unit
         List<UserDTO> returnList = new ArrayList<>();
 
-        List<User>  userList = userService.findAll();
+        List<User>  userList = getService().findAll();
         // build return list by looping through all users
         for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
             returnList.add(buildUserDTO(iterUser.next()));
@@ -108,8 +98,8 @@ public class BusinessUnitUserController extends AbstractLongIdController<User>  
     public List<UserDTO> findOne(@PathVariable("id") final Long id) {
         // return all users that belongs to a business unit
         List<UserDTO> returnList = new ArrayList<>();
-        BusinessUnit businessUnit = businessUnitService.findOne(id.intValue());
-        List<User>  userList = userService.findAll();
+        BusinessUnit businessUnit = getBusinessUnitService().findOne(id.intValue());
+        List<User>  userList = getService().findAll();
         // build return list by looping through all users
         if(businessUnit != null) {
             for (Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
@@ -131,32 +121,5 @@ public class BusinessUnitUserController extends AbstractLongIdController<User>  
 
 
 
-    @Override
-    protected ILongRawService<User> getService() {
 
-        return userService;
-    }
-
-
-    private UserDTO buildUserDTO(User user){
-         UserDTO userDTO = new UserDTO();
-         userDTO.setId(user.getId());
-         userDTO.setName(user.getName());
-         userDTO.setUser_type(user.getUser_type());
-        for(Iterator<BusinessUnit> iterBU = user.getBusinessUnits().iterator(); iterBU.hasNext();) {
-            userDTO.addBusinssUnitDTO(buildBusinessUnitDTO(iterBU.next()));
-        }
-
-        return userDTO;
-    }
-
-    public BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
-        BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
-        businessUnitDTO.setId(currentBU.getId());
-        businessUnitDTO.setName(currentBU.getName());
-        businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-        businessUnitDTO.setLdapName(currentBU.getLdapName());
-
-        return businessUnitDTO;
-    }
 }
