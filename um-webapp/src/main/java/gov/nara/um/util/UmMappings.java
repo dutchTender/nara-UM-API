@@ -16,7 +16,7 @@ public final class UmMappings {
 
         public static final String BUSINESSUNIT = "business-unit";
 
-        public static final String USER = "user";
+
     }
 
     public static final String AUTHENTICATION = "authentication";

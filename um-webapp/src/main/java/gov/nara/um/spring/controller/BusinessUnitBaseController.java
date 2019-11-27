@@ -6,6 +6,7 @@ import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.BusinessUnit;
 import gov.nara.um.persistence.model.BusinessUnitConfigurationPreference;
 import gov.nara.um.service.IBusinessUnitConfigurationService;
+import gov.nara.um.service.IBusinessUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class BusinessUnitBaseController  extends AbstractController<BusinessUnit> {
@@ -13,7 +14,8 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
     @Autowired
     private IBusinessUnitConfigurationService configurationService;
 
-
+    @Autowired
+    private IBusinessUnitService service;
 
     public BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
         BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
@@ -43,7 +45,19 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
         return businessUnitConfigurationPreference;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Spring
+    // dependency injection
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    protected final IBusinessUnitService getService() {
+        return service;
+    }
 
+
+    protected final IBusinessUnitConfigurationService getConfigurationService() {
+        return configurationService;
+    }
 
 
 }

@@ -2,8 +2,10 @@ package gov.nara.um.spring.controller;
 
 
 
+import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.*;
 import gov.nara.um.service.IBusinessUnitConfigurationService;
 import gov.nara.um.service.IBusinessUnitService;
@@ -21,14 +23,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS_CONFIGURATIONS_PREFERENCES)
-public class BusinessUnitConfigurationPreferenceController  {
-
-    @Autowired
-    private IBusinessUnitService service;
+public class BusinessUnitConfigurationPreferenceController extends BusinessUnitBaseController {
 
 
-    @Autowired
-    private IBusinessUnitConfigurationService configurationService;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -44,6 +42,23 @@ public class BusinessUnitConfigurationPreferenceController  {
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<BusinessUnitConfigPreferenceDTO> findAllPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
+
+        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+
+        for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
+            BusinessUnit currentBU = iterBU.next();
+            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
+                returnList.add(businessUnitConfigPreferenceDTO);
+            }
+        }
+
+        return returnList;
+    }
+
 
 
 
@@ -55,6 +70,23 @@ public class BusinessUnitConfigurationPreferenceController  {
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @RequestMapping(params = { QueryConstants.SORT_BY }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<BusinessUnitConfigPreferenceDTO> findAllSorted(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+
+        for(Iterator<BusinessUnit> iterBU = findAllSortedInternal(sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
+            BusinessUnit currentBU = iterBU.next();
+
+            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
+                returnList.add(businessUnitConfigPreferenceDTO);
+            }
+
+        }
+
+        return returnList;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -66,16 +98,18 @@ public class BusinessUnitConfigurationPreferenceController  {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigurationPreference> findAll(final HttpServletRequest request) {
-        List<BusinessUnitConfigurationPreference> returnList = new ArrayList<BusinessUnitConfigurationPreference>();
-        List<BusinessUnit>  buList = service.findAll();
+    public List<BusinessUnitConfigPreferenceDTO> findAll(final HttpServletRequest request) {
+        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+
+        List<BusinessUnit>  buList = getService().findAll();
         // build return list by looping through all users
         for(Iterator<BusinessUnit> iterUser = buList.iterator(); iterUser.hasNext(); ) {
             BusinessUnit current = iterUser.next();
             List<BusinessUnitConfigurationPreference> preferenceList = current.getBusinessUnitConfigurationPreferences();
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = preferenceList.iterator(); iterBUCP.hasNext(); ) {
                 BusinessUnitConfigurationPreference bucp = iterBUCP.next();
-                returnList.add(bucp);
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(bucp);
+                returnList.add(businessUnitConfigPreferenceDTO);
             }
 
         }
@@ -93,14 +127,15 @@ public class BusinessUnitConfigurationPreferenceController  {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigurationPreference> findOne(@PathVariable("id") final Integer id) {
-        List<BusinessUnitConfigurationPreference> returnList = new ArrayList<BusinessUnitConfigurationPreference>();
-        BusinessUnit businessUnit = service.findOne(id);
+    public List<BusinessUnitConfigPreferenceDTO> findOne(@PathVariable("id") final Integer id) {
+        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+        BusinessUnit businessUnit = getService().findOne(id);
         // build return list by looping through all users
         if( businessUnit != null) {
             for (Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().iterator(); iterBUCP.hasNext(); ) {
                 BusinessUnitConfigurationPreference bucp = iterBUCP.next();
-                returnList.add(bucp);
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(bucp);
+                returnList.add(businessUnitConfigPreferenceDTO);
             }
 
         }
@@ -121,15 +156,15 @@ public class BusinessUnitConfigurationPreferenceController  {
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final BusinessUnitConfigPreferenceDTO resource) {
 
-        BusinessUnit businessUnit = service.findOne(resource.getBusiness_unit_id());
+        BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
         if(businessUnit != null){
             BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
             businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-            BusinessUnitConfiguration businessUnitConfiguration = configurationService.findOne(resource.getBusiness_unit_config_id());
+            BusinessUnitConfiguration businessUnitConfiguration = getConfigurationService().findOne(resource.getBusiness_unit_config_id());
             businessUnitConfigurationPreference.setBusinessUnitConfigID(businessUnitConfiguration);
             businessUnitConfigurationPreference.setConfigurationValue(resource.getConfiguration_value());
             businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-            service.update(businessUnit);
+            getService().update(businessUnit);
         }
         else {
             throw new MyResourceNotFoundException("the payload id for business unit is not valid.");
@@ -166,15 +201,15 @@ public class BusinessUnitConfigurationPreferenceController  {
     public void delete(@PathVariable("id") final Long id, @RequestBody final BusinessUnitConfigPreferenceDTO resource) {
         //deleteByIdInternal(id);
 
-        BusinessUnit businessUnit = service.findOne(resource.getBusiness_unit_id());
+        BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
         if(businessUnit != null){
             BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
             businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-            BusinessUnitConfiguration businessUnitConfiguration = configurationService.findOne(resource.getBusiness_unit_config_id());
+            BusinessUnitConfiguration businessUnitConfiguration = getConfigurationService().findOne(resource.getBusiness_unit_config_id());
             businessUnitConfigurationPreference.setBusinessUnitConfigID(businessUnitConfiguration);
             businessUnitConfigurationPreference.setConfigurationValue(resource.getConfiguration_value());
             businessUnit.removeBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-            service.update(businessUnit);
+            getService().update(businessUnit);
         }
         else {
             throw new MyResourceNotFoundException("the payload id for business unit is not valid.");
@@ -187,10 +222,6 @@ public class BusinessUnitConfigurationPreferenceController  {
     // Spring
     // dependency injection
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    protected final IBusinessUnitService getService() {
-        return service;
-    }
 
 }
 

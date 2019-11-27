@@ -32,8 +32,7 @@ import java.util.List;
 @RequestMapping(value = UmMappings.BUSINESSUNITS)
 public class BusinessUnitController extends BusinessUnitBaseController    implements ISortingController<BusinessUnit> {
 
-    @Autowired
-    private IBusinessUnitService service;
+
 
 
 
@@ -201,7 +200,7 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
         // name has to be unique
 
         // verify that they new name does not clash with existing business unit names
-        BusinessUnit uniqueUnit = service.findByName(resource.getName());
+        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
         if(uniqueUnit != null){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
@@ -225,7 +224,7 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
                 BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                 currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
             }
-            service.update(currentBU);
+            getService().update(currentBU);
         }
 
     }
@@ -251,13 +250,13 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
 
         // verify that the name field is unique
         // verify that they new name does not clash with existing business unit names
-        BusinessUnit uniqueUnit = service.findByName(resource.getName());
+        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
         if(uniqueUnit.getId() != id){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
 
 
-        BusinessUnit businessUnit = service.findOne(id);
+        BusinessUnit businessUnit = getService().findOne(id);
         if(businessUnit == null){
             throw new MyBadRequestException("provided path id variable is not valid. Bad Request exception.");
         }
@@ -321,12 +320,12 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
 
             }
 
-            service.update(businessUnit);
+            getService().update(businessUnit);
 
         }
         else {
             businessUnit.getBusinessUnitConfigurationPreferences().clear();
-            service.update(businessUnit);
+            getService().update(businessUnit);
         }
 
 
@@ -348,15 +347,6 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
     }
 
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Spring
-    // dependency injection
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @Override
-    protected final IBusinessUnitService getService() {
-        return service;
-    }
 
 
     // private helpers
