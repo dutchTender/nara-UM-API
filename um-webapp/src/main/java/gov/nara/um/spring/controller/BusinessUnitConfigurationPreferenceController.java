@@ -3,8 +3,10 @@ package gov.nara.um.spring.controller;
 
 
 import gov.nara.common.util.QueryConstants;
+import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.BusinessUnitConfigPreferencesPutDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.*;
 import gov.nara.um.service.IBusinessUnitConfigurationService;
@@ -107,8 +109,7 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
             BusinessUnit current = iterUser.next();
             List<BusinessUnitConfigurationPreference> preferenceList = current.getBusinessUnitConfigurationPreferences();
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = preferenceList.iterator(); iterBUCP.hasNext(); ) {
-                BusinessUnitConfigurationPreference bucp = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(bucp);
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
                 returnList.add(businessUnitConfigPreferenceDTO);
             }
 
@@ -133,8 +134,7 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
         // build return list by looping through all users
         if( businessUnit != null) {
             for (Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().iterator(); iterBUCP.hasNext(); ) {
-                BusinessUnitConfigurationPreference bucp = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(bucp);
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
                 returnList.add(businessUnitConfigPreferenceDTO);
             }
 
@@ -158,11 +158,7 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
 
         BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
         if(businessUnit != null){
-            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-            businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-            BusinessUnitConfiguration businessUnitConfiguration = getConfigurationService().findOne(resource.getBusiness_unit_config_id());
-            businessUnitConfigurationPreference.setBusinessUnitConfigID(businessUnitConfiguration);
-            businessUnitConfigurationPreference.setConfigurationValue(resource.getConfiguration_value());
+            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, resource);
             businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
             getService().update(businessUnit);
         }
@@ -182,10 +178,76 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") final Long id, @RequestBody final BusinessUnitConfigurationPreference resource) {
-        //updateInternal(id, resource);
+    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitConfigPreferencesPutDTO resource) {
 
-        // not really sure we can do update here ???
+        BusinessUnit businessUnit = getService().findOne(id);
+
+        if(businessUnit == null){
+            throw new MyBadRequestException("provided path id variable is not valid. Bad Request exception.");
+        }
+
+
+        List<BusinessUnitConfigPreferenceDTO> inputPrefListDTO = resource.getBusinessUnitConfigPreferences();
+        List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
+        if(inputPrefListDTO.size() > 0) { // input preferences is not null
+
+            if(preferencesList.size() > 0){  // existing preferences is not empty
+
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = inputPrefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                    BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
+                    Integer bucpIndex = 0;
+                    Integer currentPreferenceSize = businessUnit.getBusinessUnitConfigurationPreferences().size();
+                    for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                        // check if preferences that needs update
+
+                        if(bucpIndex <= currentPreferenceSize){
+                            // verify that the DTO ids match the actual object
+                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = iterBUCP.next();
+
+                            // business unit ids is implicitly supplied ..only need to verify config idp
+                            if(businessUnitConfigurationPreference.getBusinessUnitConfigID().getId() == businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()){
+                                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
+                                businessUnit.getBusinessUnitConfigurationPreferences().set(bucpIndex, businessUnitConfigurationPreference);
+                            }
+                            else{
+                                throw new MyBadRequestException("only configuration value is allowed to be updated. not the configuration id key");
+                            }
+
+                        }
+                        else {
+
+                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
+                            businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+
+                        }
+
+                        bucpIndex++;
+
+
+                    }
+
+                }
+            }
+            else {
+                // existing preferences empty. just need to add new preferences
+                // create busienss preference and add it to business unit
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = inputPrefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                    BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
+                    BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
+                    businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+                }
+
+            }
+
+            getService().update(businessUnit);
+
+        }
+        else {
+            // input list is null ..clear all preferences
+            businessUnit.getBusinessUnitConfigurationPreferences().clear();
+            getService().update(businessUnit);
+        }
+
     }
 
 
