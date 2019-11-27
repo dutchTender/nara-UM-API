@@ -265,11 +265,7 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
 
         BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
         if(businessUnit != null){
-            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = new BusinessUnitConfigurationPreference();
-            businessUnitConfigurationPreference.setBusinessUnitID(businessUnit);
-            BusinessUnitConfiguration businessUnitConfiguration = getConfigurationService().findOne(resource.getBusiness_unit_config_id());
-            businessUnitConfigurationPreference.setBusinessUnitConfigID(businessUnitConfiguration);
-            businessUnitConfigurationPreference.setConfigurationValue(resource.getConfiguration_value());
+            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, resource);
             businessUnit.removeBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
             getService().update(businessUnit);
         }
