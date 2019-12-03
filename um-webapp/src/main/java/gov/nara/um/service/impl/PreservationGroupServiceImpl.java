@@ -1,23 +1,23 @@
 package gov.nara.um.service.impl;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
-
-import gov.nara.um.persistence.dao.IUserJpaDao;
-import gov.nara.um.persistence.model.bussinessUnits.User;
-import gov.nara.um.service.IUserService;
+import gov.nara.um.persistence.dao.IPreservationGroupDao;
+import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
+import gov.nara.um.service.IPreservationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @Transactional
-public class UserServiceImpl extends AbstractLongIdService<User>  implements IUserService {
+public class PreservationGroupServiceImpl extends AbstractLongIdService<PreservationGroup> implements IPreservationGroupService {
+
+
 
     @Autowired
-    private IUserJpaDao dao;
+    private IPreservationGroupDao  dao;
 
-    public UserServiceImpl() {
+    public PreservationGroupServiceImpl() {
         super();
     }
 
@@ -26,7 +26,7 @@ public class UserServiceImpl extends AbstractLongIdService<User>  implements IUs
     // find
     @Override
     @Transactional(readOnly = true)
-    public User findByName(final String name) {
+    public PreservationGroup findByName(final String name) {
         return dao.findByName(name);
     }
 
@@ -35,12 +35,12 @@ public class UserServiceImpl extends AbstractLongIdService<User>  implements IUs
     // Spring
 
     @Override
-    protected final IUserJpaDao getDao() {
+    protected final IPreservationGroupDao getDao() {
         return dao;
     }
 
     @Override
-    protected JpaSpecificationExecutor<User> getSpecificationExecutor() {
+    protected JpaSpecificationExecutor<PreservationGroup> getSpecificationExecutor() {
         return dao;
     }
 }

@@ -1,26 +1,19 @@
 package gov.nara.um.spring.controller;
 
 import gov.nara.common.util.QueryConstants;
-import gov.nara.common.web.controller.AbstractController;
 import gov.nara.common.web.controller.ISortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
-import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
-import gov.nara.um.persistence.model.BusinessUnit;
-import gov.nara.um.persistence.model.BusinessUnitConfiguration;
-import gov.nara.um.persistence.model.BusinessUnitConfigurationPreference;
-import gov.nara.um.service.IBusinessUnitConfigurationService;
-import gov.nara.um.service.IBusinessUnitService;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
 import gov.nara.um.util.UmMappings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -191,7 +184,6 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @Transactional
     public void create(@RequestBody final BusinessUnitDTO resource) {
 
         // validate DTO
@@ -238,7 +230,6 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
     public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitDTO resource) {
 
 

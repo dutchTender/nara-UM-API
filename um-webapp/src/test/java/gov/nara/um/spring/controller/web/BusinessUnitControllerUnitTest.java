@@ -1,16 +1,18 @@
 package gov.nara.um.spring.controller.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nara.um.persistence.model.BusinessUnit;
+import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.BusinessUnitDTO;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.service.IBusinessUnitService;
 
 
 import gov.nara.um.spring.controller.BusinessUnitController;
+import gov.nara.um.util.UmMappings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -76,15 +78,20 @@ public class BusinessUnitControllerUnitTest {
     @Test
     public final void check_Business_unit_controller_AddOne_201_status_OK() throws Exception {
 
-        BusinessUnit test_unit = new BusinessUnit();
+        BusinessUnitDTO test_unit = new BusinessUnitDTO();
         test_unit.setName("apex");
+        //test_unit.setId(99);
         test_unit.setLdapName("grant thornton");
         test_unit.setOrg_code("NARA a2");
+        BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
+        businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(Long.valueOf(2));
+        businessUnitConfigPreferenceDTO.setConfiguration_value("325253453453");
+        test_unit.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json_payLoad = objectMapper.writeValueAsString(test_unit);
         try {
-            mvc.perform(post("/businessunits/")
+            mvc.perform(post("/"+UmMappings.BUSINESSUNITS)
                     .contentType(MediaType.APPLICATION_JSON).content(json_payLoad))
                     .andExpect(status().is(201)).andDo(print());
             // A 201 is needed to verify post request that the url handling works
@@ -107,7 +114,7 @@ public class BusinessUnitControllerUnitTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json_payLoad = objectMapper.writeValueAsString(test_unit);
         try {
-            mvc.perform(put("/businessunits/2")
+            mvc.perform(put(UmMappings.BUSINESSUNITS+"/2")
                     .contentType(MediaType.APPLICATION_JSON).content(json_payLoad))
                     .andExpect(status().is(404)).andDo(print());
             // A 201 is needed to verify post request that the url handling works
@@ -125,7 +132,7 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_deleteOne_204_status_OK() throws Exception {
 
         try {
-            mvc.perform(delete("/businessunits/2")
+            mvc.perform(delete(UmMappings.BUSINESSUNITS+"/2")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().is(204)).andDo(print());
                     // A 202 is needed to verify delete request that the url handling works

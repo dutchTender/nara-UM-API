@@ -1,14 +1,9 @@
 package gov.nara.um.persistence.setup;
 
-import java.util.Set;
-
-import gov.nara.um.persistence.dao.IBusinessUnitDao;
-import gov.nara.um.persistence.dao.IUserJpaDao;
-import gov.nara.um.persistence.model.BusinessUnit;
-import gov.nara.um.persistence.model.User;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.model.bussinessUnits.User;
 import gov.nara.um.service.IBusinessUnitService;
 import gov.nara.um.service.IUserService;
-import gov.nara.um.util.Um;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +13,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import gov.nara.common.spring.util.Profiles;
-import com.google.common.collect.Sets;
 
 /**
  * This simple setup class will run during the bootstrap process of Spring and will create some setup data <br>

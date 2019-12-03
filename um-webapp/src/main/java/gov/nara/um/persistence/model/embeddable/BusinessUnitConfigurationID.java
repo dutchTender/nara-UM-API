@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.model;
+package gov.nara.um.persistence.model.embeddable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;

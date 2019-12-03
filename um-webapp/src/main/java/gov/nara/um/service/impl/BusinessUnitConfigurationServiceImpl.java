@@ -2,7 +2,7 @@ package gov.nara.um.service.impl;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
 import gov.nara.um.persistence.dao.IBusinessUnitConfigurationDao;
-import gov.nara.um.persistence.model.BusinessUnitConfiguration;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfiguration;
 
 import gov.nara.um.service.IBusinessUnitConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;

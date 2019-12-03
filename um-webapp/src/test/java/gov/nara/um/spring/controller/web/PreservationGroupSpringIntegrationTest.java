@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ContextConfiguration(classes = {UmPersistenceJpaConfig.class})
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class BusinessUnitSpringIntegrationTest {
+public class PreservationGroupSpringIntegrationTest {
 // we are going to modify this to do a dataJPA test for integration testing
 
 
