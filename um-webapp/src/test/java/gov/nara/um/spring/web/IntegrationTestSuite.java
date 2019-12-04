@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller.web;
+package gov.nara.um.spring.web;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

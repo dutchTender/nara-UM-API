@@ -1,15 +1,13 @@
-package gov.nara.um.spring.controller.businessunits;
-
-
+package gov.nara.um.spring.web.businessunits;
 
 import gov.nara.common.util.QueryConstants;
+import gov.nara.common.web.controller.ISortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
-import gov.nara.common.web.exception.MyResourceNotFoundException;
+import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
-import gov.nara.um.persistence.dto.BusinessUnitConfigPreferencesPutDTO;
+import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
-import gov.nara.um.spring.controller.businessunits.BusinessUnitBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,9 +19,15 @@ import java.util.Iterator;
 import java.util.List;
 
 
+
+
 @Controller
-@RequestMapping(value = UmMappings.BUSINESSUNITS_CONFIGURATIONS_PREFERENCES)
-public class BusinessUnitConfigurationPreferenceController extends BusinessUnitBaseController {
+@RequestMapping(value = UmMappings.BUSINESSUNITS)
+public class BusinessUnitController extends BusinessUnitBaseController implements ISortingController<BusinessUnit> {
+
+
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -32,31 +36,48 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE, QueryConstants.SORT_BY }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<BusinessUnit> findAllPaginatedAndSorted(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size, @RequestParam(value = QueryConstants.SORT_BY) final String sortBy,
+                                                @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        return findPaginatedAndSortedInternal(page, size, sortBy, sortOrder);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // find - all/paginated
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // sort helper
+
+   @Override
+    public List<BusinessUnit> findAllPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
+        return findPaginatedInternal(page, size);
+    }
+
     @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE }, method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigPreferenceDTO> findAllPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
+    public List<BusinessUnitDTO> findAllPaginatedBUDTO(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
 
-        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+        List<BusinessUnitDTO> returnList = new ArrayList<>();
 
         for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                returnList.add(businessUnitConfigPreferenceDTO);
+                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
+            returnList.add(businessUnitDTO);
+
         }
 
         return returnList;
     }
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,23 +88,32 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public List<BusinessUnit> findAllSorted(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        return findAllSortedInternal(sortBy, sortOrder);
+    }
+
+
     @RequestMapping(params = { QueryConstants.SORT_BY }, method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigPreferenceDTO> findAllSorted(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
-        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+    public List<BusinessUnitDTO> findAllSortedBUDTO(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        List<BusinessUnitDTO> returnList = new ArrayList<>();
 
         for(Iterator<BusinessUnit> iterBU = findAllSortedInternal(sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
-
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                returnList.add(businessUnitConfigPreferenceDTO);
+                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
+            returnList.add(businessUnitDTO);
 
         }
 
         return returnList;
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -92,27 +122,35 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigPreferenceDTO> findAll(final HttpServletRequest request) {
-        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
+    @Override
+    public List<BusinessUnit> findAll(final HttpServletRequest request) {
+        return findAllInternal(request);
+    }
 
-        List<BusinessUnit>  buList = getService().findAll();
-        // build return list by looping through all users
-        for(Iterator<BusinessUnit> iterUser = buList.iterator(); iterUser.hasNext(); ) {
-            BusinessUnit current = iterUser.next();
-            List<BusinessUnitConfigurationPreference> preferenceList = current.getBusinessUnitConfigurationPreferences();
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = preferenceList.iterator(); iterBUCP.hasNext(); ) {
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                returnList.add(businessUnitConfigPreferenceDTO);
+
+
+    //@RequestMapping(method = RequestMethod.GET)
+    //@ResponseBody
+    public List<BusinessUnitDTO> findAllBUDTO(final HttpServletRequest request) {
+        List<BusinessUnitDTO> returnList = new ArrayList<>();
+
+        for(Iterator<BusinessUnit> iterBU = findAllInternal(request).listIterator(); iterBU.hasNext(); ) {
+            BusinessUnit currentBU = iterBU.next();
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
+            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO( currentBUCP);
+                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
+            returnList.add(businessUnitDTO);
 
         }
+
         return returnList;
-
-
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -123,21 +161,17 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<BusinessUnitConfigPreferenceDTO> findOne(@PathVariable("id") final Integer id) {
-        List<BusinessUnitConfigPreferenceDTO> returnList = new ArrayList<>();
-        BusinessUnit businessUnit = getService().findOne(id);
-        // build return list by looping through all users
-        if( businessUnit != null) {
-            for (Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().iterator(); iterBUCP.hasNext(); ) {
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                returnList.add(businessUnitConfigPreferenceDTO);
-            }
+    public BusinessUnitDTO findOne(@PathVariable("id") final Integer id) {
 
+        BusinessUnit currentBU = findOneInternal(id);
+        BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
+        for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+            BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+            businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
         }
-        else {
-            throw new MyResourceNotFoundException("the path id for business unit is not valid.");
-        }
-        return returnList;
+
+        return businessUnitDTO;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,21 +181,46 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final BusinessUnitConfigPreferenceDTO resource) {
+    public void create(@RequestBody final BusinessUnitDTO resource) {
 
-        BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
-        if(businessUnit != null){
-            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, resource);
-            businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-            getService().update(businessUnit);
-        }
-        else {
-            throw new MyResourceNotFoundException("the payload id for business unit is not valid.");
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+
+        // verify that they new name does not clash with existing business unit names
+        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
+        if(uniqueUnit != null){
+            throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
 
-       // createInternal(resource);
+        // assumes DTO is valid
+        // build business unit object
+        BusinessUnit businessUnit = new BusinessUnit();
+        businessUnit.setName(resource.getName());
+        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setLdapName(resource.getLdapName());
+        createInternal(businessUnit);
+
+        // business unit preference is required ....can be empty
+        // if preference is not null in the DTO
+        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
+
+        if(prefList.size() > 0){ // we may force this size to be 1
+            BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
+            for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
+                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
+                currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
+            }
+            getService().update(currentBU);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,22 +232,42 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitConfigPreferencesPutDTO resource) {
+    public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitDTO resource) {
+
+
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+
+
+        // verify that the name field is unique
+        // verify that they new name does not clash with existing business unit names
+        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
+        if(uniqueUnit.getId() != id){
+            throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
+        }
+
 
         BusinessUnit businessUnit = getService().findOne(id);
-
         if(businessUnit == null){
             throw new MyBadRequestException("provided path id variable is not valid. Bad Request exception.");
         }
 
 
-        List<BusinessUnitConfigPreferenceDTO> inputPrefListDTO = resource.getBusinessUnitConfigPreferences();
+        // assumes DTO is valid when execution reaches here
+        // build business unit object
+        businessUnit.setName(resource.getName());
+        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setLdapName(resource.getLdapName());
+
+        List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusinessUnitConfigPreferences();
         List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
-        if(inputPrefListDTO.size() > 0) { // input preferences is not null
+        if(prefListDTO.size() > 0) { // input preferences is not null
 
             if(preferencesList.size() > 0){  // existing preferences is not empty
 
-                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = inputPrefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
                     BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
                     Integer bucpIndex = 0;
                     Integer currentPreferenceSize = businessUnit.getBusinessUnitConfigurationPreferences().size();
@@ -226,7 +305,7 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
             else {
                 // existing preferences empty. just need to add new preferences
                 // create busienss preference and add it to business unit
-                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = inputPrefListDTO.listIterator(); iterBUCPDTO.hasNext();){
+                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
                     BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
                     BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                     businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
@@ -238,10 +317,11 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
 
         }
         else {
-            // input list is null ..clear all preferences
             businessUnit.getBusinessUnitConfigurationPreferences().clear();
             getService().update(businessUnit);
         }
+
+
 
     }
 
@@ -255,26 +335,17 @@ public class BusinessUnitConfigurationPreferenceController extends BusinessUnitB
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") final Long id, @RequestBody final BusinessUnitConfigPreferenceDTO resource) {
-        //deleteByIdInternal(id);
-
-        BusinessUnit businessUnit = getService().findOne(resource.getBusiness_unit_id());
-        if(businessUnit != null){
-            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, resource);
-            businessUnit.removeBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-            getService().update(businessUnit);
-        }
-        else {
-            throw new MyResourceNotFoundException("the payload id for business unit is not valid.");
-        }
+    public void delete(@PathVariable("id") final Integer id) {
+        deleteByIdInternal(id);
     }
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Spring
-    // dependency injection
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // private helpers
+
+
+
+
 
 }
-

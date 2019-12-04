@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller.web;
+package gov.nara.um.spring.web;
 
 import gov.nara.um.persistence.dao.IBusinessUnitDao;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;

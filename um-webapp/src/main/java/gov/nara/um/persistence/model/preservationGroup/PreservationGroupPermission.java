@@ -4,12 +4,13 @@ package gov.nara.um.persistence.model.preservationGroup;
 import gov.nara.um.persistence.model.embeddable.PreservationGroupPermissionID;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 //@Table(name = "group_permissions", schema = "oif_ods")
 @Table(name = "group_permissions")
-public class PreservationGroupPermission {
+public class PreservationGroupPermission implements Serializable {
 
     @EmbeddedId
     private PreservationGroupPermissionID id = new PreservationGroupPermissionID();
@@ -22,13 +23,14 @@ public class PreservationGroupPermission {
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("assigningGroupID")
     @JoinColumn(name="assigned_group_id", nullable=false)
-    private AssigningGroup assigningGroupID;
+
+    private PreservationGroup assigningGroupID;
 
 
     @Column(name = "permission_level")
     private String permissionLevel;
 
-    public PreservationGroupPermission(PreservationGroup preservationGroupID, AssigningGroup assigningGroupID) {
+    public PreservationGroupPermission(PreservationGroup preservationGroupID, PreservationGroup assigningGroupID) {
         this.preservationGroupID = preservationGroupID;
         this.assigningGroupID = assigningGroupID;
     }
@@ -46,11 +48,11 @@ public class PreservationGroupPermission {
         this.preservationGroupID = preservationGroupID;
     }
 
-    public AssigningGroup getAssigningGroupID() {
+    public PreservationGroup getAssigningGroupID() {
         return assigningGroupID;
     }
 
-    public void setAssigningGroupID(AssigningGroup assigningGroupID) {
+    public void setAssigningGroupID(PreservationGroup assigningGroupID) {
         this.assigningGroupID = assigningGroupID;
     }
 

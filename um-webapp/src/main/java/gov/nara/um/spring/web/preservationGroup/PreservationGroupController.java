@@ -1,8 +1,7 @@
-package gov.nara.um.spring.controller.preservationGroup;
+package gov.nara.um.spring.web.preservationGroup;
 
 import gov.nara.common.web.controller.ILongIdSortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
-import gov.nara.um.persistence.model.preservationGroup.AssigningGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.util.UmMappings;
@@ -48,51 +47,60 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
         PreservationGroup preservationGroup = new PreservationGroup();
         preservationGroup.setName(resource.getName());
         preservationGroup.setGroup_description(resource.getGroup_description());
-        createInternal(preservationGroup);
+
+        if(getService().findByName(resource.getName()) == null){
+            createInternal(preservationGroup);
+        }
 
 
-        AssigningGroup defaultGroup = new AssigningGroup();
+
+        PreservationGroup defaultGroup = new PreservationGroup();
         defaultGroup.setName("default");
+        //defaultGroup.setGroup_permission("Content");
         defaultGroup.setGroup_description(resource.getGroup_description());
-
-        if(getAssigningGroupService().findByName(defaultGroup.getName()) == null){
-            getAssigningGroupService().create(defaultGroup);
+        if(getService().findByName(defaultGroup.getName()) == null){
+            createInternal(defaultGroup);
         }
 
 
 
         PreservationGroup newGroupAdded = getService().findByName(resource.getName());
-        AssigningGroup referenceGroup = getAssigningGroupService().findByName(defaultGroup.getName());
+        PreservationGroup referenceGroup = getService().findByName(defaultGroup.getName());
+
+        PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
 
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         System.out.println("added group id :"+newGroupAdded.getId());
         System.out.println("reference group id :"+referenceGroup.getId());
 
+        preservationGroupPermission.setAssigningGroupID(referenceGroup);
+        preservationGroupPermission.setPreservationGroupID(newGroupAdded);
         if(newGroupAdded == null){
             throw new MyBadRequestException("new group added returned null");
 
         }
+        newGroupAdded.addGroupPermission(preservationGroupPermission);
 
-        PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
-        preservationGroupPermission.setPreservationGroupID(newGroupAdded);
-        preservationGroupPermission.setAssigningGroupID(referenceGroup);
-        preservationGroupPermission.setPermissionLevel("Content");
+
 
 
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 
-        newGroupAdded.addGroupPermission(preservationGroupPermission);
+        //newGroupAdded.addGroupPermission(preservationGroupPermission);
 
 
 
         getService().update(newGroupAdded);
-        //referenceGroup.addAssigningGroupPermission(preservationGroupPermission);
+
         //System.out.println(returnPerm.toString());
+        referenceGroup.addAssignGroupPermission(preservationGroupPermission);
+
+
 
         System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
-
+        getService().update(referenceGroup);
 
         //getService().update(referenceGroup);
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");

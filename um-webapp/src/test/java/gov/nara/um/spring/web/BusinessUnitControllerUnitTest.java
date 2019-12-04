@@ -1,18 +1,18 @@
-package gov.nara.um.spring.controller.web;
+package gov.nara.um.spring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 
 
-import gov.nara.um.spring.controller.businessunits.BusinessUnitController;
+import gov.nara.um.spring.web.businessunits.BusinessUnitController;
 import gov.nara.um.util.UmMappings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BusinessUnitController.class)
-
+@AutoConfigureMockMvc
 public class BusinessUnitControllerUnitTest {
 
     @MockBean
@@ -46,11 +46,10 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_ListAll_200_status_OK() throws Exception {
 
         try {
-
-            mvc.perform(get(UmMappings.BUSINESSUNITS)
+            mvc.perform(get("/"+UmMappings.BUSINESSUNITS)
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().is(200)).andDo(print());
-                    // A 200 is needed to verify that th eurl handling works
+            // A 200 is needed to verify that th eurl handling works
 
         }
         catch (Exception ex){
@@ -63,10 +62,10 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_ListOne_200_status_OK() throws Exception {
 
         try {
-            mvc.perform(get(UmMappings.BUSINESSUNITS+"/1")
+            mvc.perform(get("/"+UmMappings.BUSINESSUNITS+"/1")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().is(404)).andDo(print());
-                    // we are throwing our custom exception. a 404 does verify that we are hitting the controller
+                    .andExpect(status().is(200)).andDo(print());
+            // A 200 is needed to verify that the url handling works
         }
         catch (Exception ex){
             System.out.println("exception occurred: "+ex);
@@ -75,18 +74,13 @@ public class BusinessUnitControllerUnitTest {
 
 
     // add 1 unit test
-    @Test
+   @Test
     public final void check_Business_unit_controller_AddOne_201_status_OK() throws Exception {
 
         BusinessUnitDTO test_unit = new BusinessUnitDTO();
         test_unit.setName("apex");
-        //test_unit.setId(99);
         test_unit.setLdapName("grant thornton");
         test_unit.setOrg_code("NARA a2");
-        BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-        businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(Long.valueOf(2));
-        businessUnitConfigPreferenceDTO.setConfiguration_value("325253453453");
-        test_unit.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json_payLoad = objectMapper.writeValueAsString(test_unit);
@@ -103,10 +97,10 @@ public class BusinessUnitControllerUnitTest {
     }
 
     // update 1 unit test
-   @Test
+    @Test
     public final void check_Business_unit_controller_updateOne_201_status_OK() throws Exception {
 
-        BusinessUnit test_unit = new BusinessUnit();
+        BusinessUnitDTO test_unit = new BusinessUnitDTO();
         test_unit.setName("apex");
         test_unit.setLdapName("grant thornton");
         test_unit.setOrg_code("NARA a2");
@@ -114,11 +108,10 @@ public class BusinessUnitControllerUnitTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json_payLoad = objectMapper.writeValueAsString(test_unit);
         try {
-            mvc.perform(put(UmMappings.BUSINESSUNITS+"/2")
+            mvc.perform(put("/"+UmMappings.BUSINESSUNITS+"/2")
                     .contentType(MediaType.APPLICATION_JSON).content(json_payLoad))
-                    .andExpect(status().is(404)).andDo(print());
+                    .andExpect(status().is(201)).andDo(print());
             // A 201 is needed to verify post request that the url handling works
-            // we are throwing our custom 404 ..so this is ok
 
         }
         catch (Exception ex){
@@ -132,10 +125,10 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_deleteOne_204_status_OK() throws Exception {
 
         try {
-            mvc.perform(delete(UmMappings.BUSINESSUNITS+"/2")
+            mvc.perform(delete("/"+UmMappings.BUSINESSUNITS+"/2")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().is(204)).andDo(print());
-                    // A 202 is needed to verify delete request that the url handling works
+            // A 202 is needed to verify delete request that the url handling works
 
         }
         catch (Exception ex){

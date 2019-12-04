@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller.businessunits;
+package gov.nara.um.spring.web.businessunits;
 
 import gov.nara.common.web.controller.AbstractController;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;

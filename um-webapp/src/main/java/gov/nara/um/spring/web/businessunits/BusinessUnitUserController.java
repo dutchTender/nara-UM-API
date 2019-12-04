@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller.businessunits;
+package gov.nara.um.spring.web.businessunits;
 
 
 
@@ -7,7 +7,7 @@ import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
-import gov.nara.um.spring.controller.user.UserBaseController;
+import gov.nara.um.spring.web.user.UserBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

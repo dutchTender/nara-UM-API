@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller.user;
+package gov.nara.um.spring.web.user;
 
 import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.persistence.service.IRawService;

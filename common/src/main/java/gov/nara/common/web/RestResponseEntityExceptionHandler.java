@@ -70,7 +70,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     /* if we enable this. unit test for the controller will start failing  */
 
-    @ExceptionHandler( {MyResourceNotFoundException.class })
+    //@ExceptionHandler( {MyResourceNotFoundException.class })
     protected ResponseEntity<Object> handleResourceNotFound(final MyResourceNotFoundException ex, final WebRequest request) {
 
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
@@ -84,7 +84,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = { EntityNotFoundException.class })
+   @ExceptionHandler(value = { EntityNotFoundException.class })
     protected ResponseEntity<Object> handleBadRequest(final EntityNotFoundException ex, final WebRequest request) {
 
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.NOT_FOUND, ex), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
@@ -106,7 +106,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, exceptionMessage(HttpStatus.PRECONDITION_FAILED, ex), new HttpHeaders(), HttpStatus.PRECONDITION_FAILED, request);
     }
 
-    @ExceptionHandler({ NullPointerException.class, IllegalArgumentException.class, IllegalStateException.class })
+    //@ExceptionHandler({ NullPointerException.class, IllegalArgumentException.class, IllegalStateException.class })
     /*500*/public ResponseEntity<Object> handleInternal(final RuntimeException ex, final WebRequest request) {
         logger.error("500 Status Code", ex);
 
