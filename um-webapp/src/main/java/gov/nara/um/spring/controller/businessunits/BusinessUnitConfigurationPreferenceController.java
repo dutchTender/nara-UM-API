@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller;
+package gov.nara.um.spring.controller.businessunits;
 
 
 
@@ -9,6 +9,7 @@ import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferencesPutDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
+import gov.nara.um.spring.controller.businessunits.BusinessUnitBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,6 @@ import java.util.List;
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS_CONFIGURATIONS_PREFERENCES)
 public class BusinessUnitConfigurationPreferenceController extends BusinessUnitBaseController {
-
-
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API

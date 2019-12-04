@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
-import gov.nara.um.service.IBusinessUnitService;
+import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 
 
-import gov.nara.um.spring.controller.BusinessUnitController;
+import gov.nara.um.spring.controller.businessunits.BusinessUnitController;
 import gov.nara.um.util.UmMappings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +47,7 @@ public class BusinessUnitControllerUnitTest {
 
         try {
 
-            mvc.perform(get("/businessunits")
+            mvc.perform(get(UmMappings.BUSINESSUNITS)
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().is(200)).andDo(print());
                     // A 200 is needed to verify that th eurl handling works
@@ -63,7 +63,7 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_ListOne_200_status_OK() throws Exception {
 
         try {
-            mvc.perform(get("/businessunits/1")
+            mvc.perform(get(UmMappings.BUSINESSUNITS+"/1")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().is(404)).andDo(print());
                     // we are throwing our custom exception. a 404 does verify that we are hitting the controller

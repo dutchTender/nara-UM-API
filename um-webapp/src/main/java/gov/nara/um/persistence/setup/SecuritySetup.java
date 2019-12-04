@@ -2,8 +2,8 @@ package gov.nara.um.persistence.setup;
 
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
-import gov.nara.um.service.IBusinessUnitService;
-import gov.nara.um.service.IUserService;
+import gov.nara.um.service.bussinessunits.IBusinessUnitService;
+import gov.nara.um.service.user.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

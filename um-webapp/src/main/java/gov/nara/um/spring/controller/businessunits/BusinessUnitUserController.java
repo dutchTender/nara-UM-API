@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller;
+package gov.nara.um.spring.controller.businessunits;
 
 
 
@@ -7,6 +7,7 @@ import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
+import gov.nara.um.spring.controller.user.UserBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS_USERS)
-public class BusinessUnitUserController extends UserBaseController  {
+public class BusinessUnitUserController extends UserBaseController {
 
 
 

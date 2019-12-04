@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller;
+package gov.nara.um.spring.controller.user;
 
 import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.persistence.service.IRawService;
@@ -7,8 +7,8 @@ import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
-import gov.nara.um.service.IBusinessUnitService;
-import gov.nara.um.service.IUserService;
+import gov.nara.um.service.bussinessunits.IBusinessUnitService;
+import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Iterator;

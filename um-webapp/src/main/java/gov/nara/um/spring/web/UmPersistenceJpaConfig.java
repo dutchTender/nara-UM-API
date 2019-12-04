@@ -1,4 +1,4 @@
-package gov.nara.um.spring;
+package gov.nara.um.spring.web;
 
 import java.util.Properties;
 

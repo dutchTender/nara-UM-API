@@ -1,4 +1,4 @@
-package gov.nara.um.spring;
+package gov.nara.um.spring.web;
 
 import gov.nara.um.persistence.setup.MyApplicationContextInitializer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -5,21 +5,18 @@ import gov.nara.common.persistence.model.ILongNameableEntity;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 //@Table(name = "group", schema = "oif_ods")
-@Table(name = "\"group\"")
-public class PreservationGroup implements ILongNameableEntity, ILongNameableDto {
+@Table(name = "\"assigning_group\"")
+public class AssigningGroup implements ILongNameableEntity, ILongNameableDto {
 
 
 
     @Id
-    @Column(name = "group_id")
+    @Column(name = "assigning_group_id")
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_gen")
     //@SequenceGenerator(name = "group_seq_gen", sequenceName = "oif_ods.group_group_id_seq", allocationSize=1)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,7 +38,7 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
 
     @Override
     public void setId(Long id) {
-           this.id = id;
+        this.id = id;
     }
 
     @Override
@@ -62,47 +59,6 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
     }
 
 
-    @OneToMany(
-            mappedBy = "preservationGroupID",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<PreservationGroupPermission> preservationGroupPermissions = new ArrayList<>();
-
-
-
-
-
-    public PreservationGroupPermission addGroupPermission(PreservationGroupPermission preservationGroupPermission){
-        System.out.println(preservationGroupPermission.getAssigningGroupID().getId());
-        preservationGroupPermissions.add(preservationGroupPermission);
-        System.out.println(preservationGroupPermission.toString());
-        return preservationGroupPermission;
-    }
-
-    public void removeGroupPermission(PreservationGroupPermission preservationGroupPermission){
-        for(Iterator<PreservationGroupPermission> iterPGP = preservationGroupPermissions.iterator(); iterPGP.hasNext(); ) {
-            PreservationGroupPermission current = iterPGP.next();
-            if(current.equals(preservationGroupPermission)){
-                iterPGP.remove();
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-    public List<PreservationGroupPermission> getPreservationGroupPermissions() {
-        return preservationGroupPermissions;
-    }
-
-    public void setPreservationGroupPermissions(List<PreservationGroupPermission> preservationGroupPermissions) {
-        this.preservationGroupPermissions = preservationGroupPermissions;
-    }
 
 
     @Override

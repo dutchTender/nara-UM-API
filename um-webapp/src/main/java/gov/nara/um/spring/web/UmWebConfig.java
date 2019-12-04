@@ -1,4 +1,4 @@
-package gov.nara.um.spring;
+package gov.nara.um.spring.web;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @Configuration
 @ComponentScan({"gov.nara.um.spring.controller"})
 @EnableWebMvc
-@EnableSwagger2
+//@EnableSwagger2
 public class UmWebConfig implements WebMvcConfigurer {
 
     public UmWebConfig() {
@@ -31,6 +31,7 @@ public class UmWebConfig implements WebMvcConfigurer {
     }
 
     // swagger configuration
+    /*
     @Bean
     public Docket swagConfig(){ // @formatter:off
         return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
@@ -42,7 +43,7 @@ public class UmWebConfig implements WebMvcConfigurer {
                 ;
     }// @formatter:on
 
-
+*/
     // custom http message converter
 
     @Override

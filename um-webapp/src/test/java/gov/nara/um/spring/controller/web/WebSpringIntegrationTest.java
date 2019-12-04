@@ -1,9 +1,9 @@
 package gov.nara.um.spring.controller.web;
 
-import gov.nara.um.spring.UmContextConfig;
-import gov.nara.um.spring.UmPersistenceJpaConfig;
-import gov.nara.um.spring.UmServiceConfig;
-import gov.nara.um.spring.UmWebConfig;
+import gov.nara.um.spring.web.UmContextConfig;
+import gov.nara.um.spring.web.UmPersistenceJpaConfig;
+import gov.nara.um.spring.web.UmServiceConfig;
+import gov.nara.um.spring.web.UmWebConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

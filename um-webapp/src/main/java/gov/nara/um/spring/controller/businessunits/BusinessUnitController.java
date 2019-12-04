@@ -1,4 +1,4 @@
-package gov.nara.um.spring.controller;
+package gov.nara.um.spring.controller.businessunits;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ISortingController;
@@ -8,6 +8,7 @@ import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
+import gov.nara.um.spring.controller.businessunits.BusinessUnitBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = UmMappings.BUSINESSUNITS)
-public class BusinessUnitController extends BusinessUnitBaseController    implements ISortingController<BusinessUnit> {
+public class BusinessUnitController extends BusinessUnitBaseController implements ISortingController<BusinessUnit> {
 
 
 
@@ -122,6 +123,8 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     @Override
     public List<BusinessUnit> findAll(final HttpServletRequest request) {
         return findAllInternal(request);
@@ -129,8 +132,8 @@ public class BusinessUnitController extends BusinessUnitBaseController    implem
 
 
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+    //@RequestMapping(method = RequestMethod.GET)
+    //@ResponseBody
     public List<BusinessUnitDTO> findAllBUDTO(final HttpServletRequest request) {
         List<BusinessUnitDTO> returnList = new ArrayList<>();
 

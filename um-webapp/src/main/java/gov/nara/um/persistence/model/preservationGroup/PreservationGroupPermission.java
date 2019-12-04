@@ -22,13 +22,13 @@ public class PreservationGroupPermission {
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("assigningGroupID")
     @JoinColumn(name="assigned_group_id", nullable=false)
-    private PreservationGroup assigningGroupID;
+    private AssigningGroup assigningGroupID;
 
 
     @Column(name = "permission_level")
     private String permissionLevel;
 
-    public PreservationGroupPermission(PreservationGroup preservationGroupID, PreservationGroup assigningGroupID) {
+    public PreservationGroupPermission(PreservationGroup preservationGroupID, AssigningGroup assigningGroupID) {
         this.preservationGroupID = preservationGroupID;
         this.assigningGroupID = assigningGroupID;
     }
@@ -36,13 +36,7 @@ public class PreservationGroupPermission {
     public PreservationGroupPermission() {
     }
 
-    public PreservationGroupPermissionID getId() {
-        return id;
-    }
 
-    public void setId(PreservationGroupPermissionID id) {
-        this.id = id;
-    }
 
     public PreservationGroup getPreservationGroupID() {
         return preservationGroupID;
@@ -52,11 +46,11 @@ public class PreservationGroupPermission {
         this.preservationGroupID = preservationGroupID;
     }
 
-    public PreservationGroup getAssigningGroupID() {
+    public AssigningGroup getAssigningGroupID() {
         return assigningGroupID;
     }
 
-    public void setAssigningGroupID(PreservationGroup assigningGroupID) {
+    public void setAssigningGroupID(AssigningGroup assigningGroupID) {
         this.assigningGroupID = assigningGroupID;
     }
 
@@ -73,13 +67,13 @@ public class PreservationGroupPermission {
         if (this == o) return true;
         if (!(o instanceof PreservationGroupPermission)) return false;
         PreservationGroupPermission that = (PreservationGroupPermission) o;
-        return getId().equals(that.getId()) &&
+        return
                 getPreservationGroupID().equals(that.getPreservationGroupID()) &&
                 getAssigningGroupID().equals(that.getAssigningGroupID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getPreservationGroupID(), getAssigningGroupID());
+        return Objects.hash(getPreservationGroupID(), getAssigningGroupID());
     }
 }

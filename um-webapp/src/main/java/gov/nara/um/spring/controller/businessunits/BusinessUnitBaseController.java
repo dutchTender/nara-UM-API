@@ -1,12 +1,12 @@
-package gov.nara.um.spring.controller;
+package gov.nara.um.spring.controller.businessunits;
 
 import gov.nara.common.web.controller.AbstractController;
 import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
-import gov.nara.um.service.IBusinessUnitConfigurationService;
-import gov.nara.um.service.IBusinessUnitService;
+import gov.nara.um.service.bussinessunits.IBusinessUnitConfigurationService;
+import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class BusinessUnitBaseController  extends AbstractController<BusinessUnit> {

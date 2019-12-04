@@ -1,4 +1,4 @@
-package gov.nara.um.service;
+package gov.nara.um.service.user;
 
 import gov.nara.common.persistence.service.ILongIdService;
 import gov.nara.um.persistence.model.bussinessUnits.User;
