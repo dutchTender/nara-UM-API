@@ -9,6 +9,10 @@ import gov.nara.um.service.bussinessunits.IBusinessUnitConfigurationService;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 abstract class BusinessUnitBaseController  extends AbstractController<BusinessUnit> {
 
     @Autowired
@@ -49,6 +53,26 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
     // Spring
     // dependency injection
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public List<BusinessUnitDTO> buildBuindessUnitDTOList(List<BusinessUnit> businessUnitList){
+        List<BusinessUnitDTO> returnList = new ArrayList<>();
+
+        for(Iterator<BusinessUnit> iterBU = businessUnitList.listIterator(); iterBU.hasNext(); ) {
+            BusinessUnit currentBU = iterBU.next();
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
+            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
+            }
+            returnList.add(businessUnitDTO);
+
+        }
+
+        return returnList;
+
+    }
+
     @Override
     protected final IBusinessUnitService getService() {
         return service;

@@ -37,11 +37,34 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE, QueryConstants.SORT_BY }, method = RequestMethod.GET)
-    @ResponseBody
+
     public List<BusinessUnit> findAllPaginatedAndSorted(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size, @RequestParam(value = QueryConstants.SORT_BY) final String sortBy,
                                                 @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
         return findPaginatedAndSortedInternal(page, size, sortBy, sortOrder);
+    }
+
+
+
+    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE, QueryConstants.SORT_BY }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<BusinessUnitDTO> findAllPaginatedAndSortedBUDTO(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size, @RequestParam(value = QueryConstants.SORT_BY) final String sortBy,
+                                                        @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+
+        List<BusinessUnitDTO> returnList = new ArrayList<>();
+
+        for(Iterator<BusinessUnit> iterBU = findPaginatedAndSortedInternal(page, size, sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
+            BusinessUnit currentBU = iterBU.next();
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
+            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
+            }
+            returnList.add(businessUnitDTO);
+
+        }
+
+        return returnList;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,20 +120,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     @RequestMapping(params = { QueryConstants.SORT_BY }, method = RequestMethod.GET)
     @ResponseBody
     public List<BusinessUnitDTO> findAllSortedBUDTO(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
-        List<BusinessUnitDTO> returnList = new ArrayList<>();
-
-        for(Iterator<BusinessUnit> iterBU = findAllSortedInternal(sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
-            BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
-                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-            }
-            returnList.add(businessUnitDTO);
-
-        }
-
+        List<BusinessUnitDTO> returnList = buildBuindessUnitDTOList( findAllSortedInternal(sortBy, sortOrder));
         return returnList;
     }
 
@@ -122,8 +132,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
+
     @Override
     public List<BusinessUnit> findAll(final HttpServletRequest request) {
         return findAllInternal(request);
@@ -131,24 +140,12 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
 
 
 
-    //@RequestMapping(method = RequestMethod.GET)
-    //@ResponseBody
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public List<BusinessUnitDTO> findAllBUDTO(final HttpServletRequest request) {
-        List<BusinessUnitDTO> returnList = new ArrayList<>();
-
-        for(Iterator<BusinessUnit> iterBU = findAllInternal(request).listIterator(); iterBU.hasNext(); ) {
-            BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO( currentBUCP);
-                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-            }
-            returnList.add(businessUnitDTO);
-
-        }
-
+        List<BusinessUnitDTO> returnList = buildBuindessUnitDTOList(findAllInternal(request));
         return returnList;
+
     }
 
 

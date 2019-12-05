@@ -1,8 +1,12 @@
 package gov.nara.um.persistence.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+@JsonPropertyOrder({ "group_id", "group_name", "group_description", "groupPermissions" })
 public class PreservationGroupDTO {
 
     private Long group_id;
