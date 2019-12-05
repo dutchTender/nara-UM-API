@@ -16,14 +16,13 @@ public class PreservationGroupPermission implements Serializable {
     private PreservationGroupPermissionID id = new PreservationGroupPermissionID();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("preservationGroupID")
+    @MapsId("groupId")
     @JoinColumn(name="group_id", nullable=false)
     private PreservationGroup preservationGroupID;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("assigningGroupID")
+    @MapsId("assignedGroupId")
     @JoinColumn(name="assigned_group_id", nullable=false)
-
     private PreservationGroup assigningGroupID;
 
 

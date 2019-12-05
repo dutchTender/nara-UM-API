@@ -109,10 +109,8 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
         preservationGroupPermission.setAssigningGroupID(referenceGroup);
         preservationGroupPermission.setPreservationGroupID(newGroupAdded);
-        if(newGroupAdded == null){
-            throw new MyBadRequestException("new group added returned null");
+        preservationGroupPermission.setPermissionLevel("your mom");
 
-        }
         newGroupAdded.addGroupPermission(preservationGroupPermission);
 
 
