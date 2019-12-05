@@ -2,6 +2,8 @@ package gov.nara.um.spring.web.preservationGroup;
 
 import gov.nara.common.web.controller.ILongIdSortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
+import gov.nara.um.persistence.dto.GroupPermissionDTO;
+import gov.nara.um.persistence.dto.PreservationGroupDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.util.UmMappings;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -35,8 +39,38 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
+    public List<PreservationGroupDTO> findAllPG(HttpServletRequest request) {
+
+
+        List<PreservationGroup> resultList =  findAllInternal(request);
+
+        List<PreservationGroupDTO> returnList = new ArrayList<>();
+        for(Iterator<PreservationGroup> iterPG = resultList.listIterator(); iterPG.hasNext();){
+            PreservationGroup preservationGroup = iterPG.next();
+            PreservationGroupDTO preservationGroupDTO = new PreservationGroupDTO();
+            preservationGroupDTO.setGroup_id(preservationGroup.getId());
+            preservationGroupDTO.setGroup_name(preservationGroup.getName());
+            preservationGroupDTO.setGroup_description(preservationGroup.getGroup_description());
+            for(Iterator<PreservationGroupPermission> iterPGP = preservationGroup.getInheritedGroups().listIterator(); iterPGP.hasNext();){
+                PreservationGroupPermission preservationGroupPermission = iterPGP.next();
+                GroupPermissionDTO groupPermissionDTO = new GroupPermissionDTO();
+                groupPermissionDTO.setGroup_id(preservationGroupPermission.getPreservationGroupID().getId());
+                groupPermissionDTO.setAssigned_group_id(preservationGroupPermission.getAssigningGroupID().getId());
+                groupPermissionDTO.setPermission_level(preservationGroupPermission.getPermissionLevel());
+                preservationGroupDTO.addGroupPermission(groupPermissionDTO);
+            }
+
+           returnList.add(preservationGroupDTO);
+        }
+
+        return  returnList;
+
+    }
+
     @Override
     public List<PreservationGroup> findAll(HttpServletRequest request) {
+
+
         return findAllInternal(request);
     }
 
@@ -86,21 +120,12 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-
-        //newGroupAdded.addGroupPermission(preservationGroupPermission);
-
-
-
         getService().update(newGroupAdded);
-
-        //System.out.println(returnPerm.toString());
-        referenceGroup.addAssignGroupPermission(preservationGroupPermission);
-
 
 
         System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
-        getService().update(referenceGroup);
+        //getService().update(referenceGroup);
 
         //getService().update(referenceGroup);
         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");

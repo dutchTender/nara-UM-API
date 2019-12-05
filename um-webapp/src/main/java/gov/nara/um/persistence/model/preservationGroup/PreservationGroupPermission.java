@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-//@Table(name = "group_permissions", schema = "oif_ods")
-@Table(name = "group_permissions")
+@Table(name = "group_permissions", schema = "oif_ods")
+//@Table(name = "group_permissions")
 public class PreservationGroupPermission implements Serializable {
 
     @EmbeddedId

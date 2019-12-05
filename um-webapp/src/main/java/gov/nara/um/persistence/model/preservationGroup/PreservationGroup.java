@@ -12,17 +12,17 @@ import java.util.Objects;
 
 
 @Entity
-//@Table(name = "group", schema = "oif_ods")
-@Table(name = "\"group\"")
+@Table(name = "group", schema = "oif_ods")
+//@Table(name = "\"group\"")
 public class PreservationGroup implements ILongNameableEntity, ILongNameableDto {
 
 
 
     @Id
     @Column(name = "group_id")
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_gen")
-    //@SequenceGenerator(name = "group_seq_gen", sequenceName = "oif_ods.group_group_id_seq", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "group_seq_gen")
+    @SequenceGenerator(name = "group_seq_gen", sequenceName = "oif_ods.group_group_id_seq", allocationSize=1)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(hidden = true)
     private Long id;
@@ -79,18 +79,18 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
 
 
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(//cascade = CascadeType.ALL,
             mappedBy = "preservationGroupID",
             fetch = FetchType.EAGER)
     private List<PreservationGroupPermission> inheritedGroups = new ArrayList<>();
 
-
-    @OneToMany(cascade = CascadeType.ALL,
+/*
+    @OneToMany(//cascade = CascadeType.ALL,
             mappedBy = "assigningGroupID",
             fetch = FetchType.EAGER)
     private List<PreservationGroupPermission> assignedGroups = new ArrayList<>();
 
-
+*/
 
     public PreservationGroupPermission addGroupPermission(PreservationGroupPermission parentGroup){
 
@@ -109,7 +109,7 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
 
 
 
-
+/*
     public PreservationGroupPermission addAssignGroupPermission(PreservationGroupPermission parentGroup){
 
         assignedGroups.add(parentGroup);
@@ -125,7 +125,7 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
         }
     }
 
-
+*/
     public List<PreservationGroupPermission> getInheritedGroups() {
         return inheritedGroups;
     }
@@ -134,6 +134,7 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
         this.inheritedGroups = inheritedGroups;
     }
 
+/*
     public List<PreservationGroupPermission> getAssignedGroups() {
         return assignedGroups;
     }
@@ -143,7 +144,7 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
     }
 
 
-
+*/
 
     @Override
     public boolean equals(Object o) {
