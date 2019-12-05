@@ -16,12 +16,12 @@ public class PreservationGroupPermission implements Serializable {
     private PreservationGroupPermissionID id = new PreservationGroupPermissionID();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("groupId")
+    @MapsId("groupId") // this needs to match the corresponding field name defined in the composite id class
     @JoinColumn(name="group_id", nullable=false)
     private PreservationGroup preservationGroupID;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("assignedGroupId")
+    @MapsId("assignedGroupId")   // this needs to match the corresponding field name defined in the composite id class
     @JoinColumn(name="assigned_group_id", nullable=false)
     private PreservationGroup assigningGroupID;
 
