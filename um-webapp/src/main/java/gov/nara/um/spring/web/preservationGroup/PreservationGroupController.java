@@ -1,7 +1,8 @@
 package gov.nara.um.spring.web.preservationGroup;
 
+import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ILongIdSortingController;
-import gov.nara.common.web.exception.MyBadRequestException;
+import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.um.persistence.dto.GroupPermissionDTO;
 import gov.nara.um.persistence.dto.PreservationGroupDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
@@ -21,28 +22,43 @@ import java.util.List;
 public class PreservationGroupController extends  PreservationGroupBaseController  implements ILongIdSortingController<PreservationGroup> {
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find - all/paginated and sorted
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    public List<PreservationGroup> findAllPaginatedAndSorted(int page, int size, String sortBy, String sortOrder) {
-        return null;
-    }
-    @Override
-    public List<PreservationGroup> findAllPaginated(int page, int size) {
-        return null;
+    @ResponseBody
+    public List<PreservationGroup> findAllPaginatedAndSorted(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size, @RequestParam(value = QueryConstants.SORT_BY) final String sortBy,
+                                                           @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        //return buildPrservationGroupDTOList(findPaginatedAndSortedInternal(page, size, sortBy, sortOrder));
+        return findPaginatedAndSortedInternal(page, size, sortBy, sortOrder);
     }
 
-    @Override
-    public List<PreservationGroup> findAllSorted(String sortBy, String sortOrder) {
-        return null;
+    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE, QueryConstants.SORT_BY }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<PreservationGroupDTO> findAllPaginatedAndSortedPG(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size, @RequestParam(value = QueryConstants.SORT_BY) final String sortBy,
+                                                             @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
+        return buildPrservationGroupDTOList(findPaginatedAndSortedInternal(page, size, sortBy, sortOrder));
+
     }
 
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find - all
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<PreservationGroupDTO> findAllPG(HttpServletRequest request) {
 
-
         List<PreservationGroup> resultList =  findAllInternal(request);
-
         List<PreservationGroupDTO> returnList = new ArrayList<>();
         for(Iterator<PreservationGroup> iterPG = resultList.listIterator(); iterPG.hasNext();){
             PreservationGroup preservationGroup = iterPG.next();
@@ -63,78 +79,113 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
         }
 
         return  returnList;
-
     }
 
     @Override
     public List<PreservationGroup> findAll(HttpServletRequest request) {
-
-
         return findAllInternal(request);
     }
 
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public PreservationGroupDTO findOne(@PathVariable("id") final Long id) {
+
+       PreservationGroup preservationGroup = findOneInternal(id);
+       PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(preservationGroup);
+       return preservationGroupDTO;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // create - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody final PreservationGroup resource) {
+    public void create(@RequestBody final PreservationGroupDTO resource) {
 
         PreservationGroup preservationGroup = new PreservationGroup();
-        preservationGroup.setName(resource.getName());
+        preservationGroup.setName(resource.getGroup_name());
         preservationGroup.setGroup_description(resource.getGroup_description());
 
-        if(getService().findByName(resource.getName()) == null){
+        if(getService().findByName(resource.getGroup_name()) == null){
             createInternal(preservationGroup);
         }
+        else {
+            throw new MyConflictException("a preservation group with this name already exsits.");
+        }
+
+        PreservationGroup newGroup = getService().findByName(resource.getGroup_name());
+        if(newGroup != null){
+            for(Iterator<GroupPermissionDTO> iterPGP = resource.getGroupPermissions().listIterator(); iterPGP.hasNext();) {
+
+                GroupPermissionDTO groupPermissionDTO = iterPGP.next();
+                PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
+                preservationGroupPermission.setPreservationGroupID(newGroup);
+                preservationGroupPermission.setAssigningGroupID(getService().findOne(groupPermissionDTO.getAssigned_group_id()));
+                preservationGroupPermission.setPermissionLevel(groupPermissionDTO.getPermission_level());
+                newGroup.addGroupPermission(preservationGroupPermission);
+
+            }
+        }
+
+        getService().update(newGroup);
+    }
 
 
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody final PreservationGroupDTO resource) {
 
-        PreservationGroup defaultGroup = new PreservationGroup();
-        defaultGroup.setName("default");
-        //defaultGroup.setGroup_permission("Content");
-        defaultGroup.setGroup_description(resource.getGroup_description());
-        if(getService().findByName(defaultGroup.getName()) == null){
-            createInternal(defaultGroup);
+     PreservationGroup  updateGroup = buildPreservationGroup(resource);
+
+        if(getService().findByName(resource.getGroup_name()) == null){
+            getService().update(updateGroup);
+        }
+        else {
+            throw new MyConflictException("a preservation group with this name already exsits.");
         }
 
 
 
-        PreservationGroup newGroupAdded = getService().findByName(resource.getName());
-        PreservationGroup referenceGroup = getService().findByName(defaultGroup.getName());
-
-        PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("added group id :"+newGroupAdded.getId());
-        System.out.println("reference group id :"+referenceGroup.getId());
-
-        preservationGroupPermission.setAssigningGroupID(referenceGroup);
-        preservationGroupPermission.setPreservationGroupID(newGroupAdded);
-        preservationGroupPermission.setPermissionLevel("your mom");
-
-        newGroupAdded.addGroupPermission(preservationGroupPermission);
-
-
-
-
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-        getService().update(newGroupAdded);
-
-
-        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-
-        //getService().update(referenceGroup);
-
-        //getService().update(referenceGroup);
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
-       //defaultGroup.addAssigningGroupPermission(preservationGroupPermission);
-        //getService().update(defaultGroup);
-
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 
     }
 
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Delete - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") final Long id) {
+        deleteByIdInternal(id);
+    }
 
+    @Override
+    public List<PreservationGroup> findAllPaginated(int page, int size) {
+        return null;
+    }
+
+    @Override
+    public List<PreservationGroup> findAllSorted(String sortBy, String sortOrder) {
+        return null;
+    }
 }

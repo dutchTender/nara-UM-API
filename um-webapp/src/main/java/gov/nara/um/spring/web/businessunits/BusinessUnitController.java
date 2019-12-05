@@ -56,8 +56,8 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
             BusinessUnit currentBU = iterBU.next();
             BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
                 businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
             returnList.add(businessUnitDTO);
@@ -91,8 +91,8 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
             BusinessUnit currentBU = iterBU.next();
             BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
             for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+
+                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
                 businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
             }
             returnList.add(businessUnitDTO);
@@ -163,8 +163,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         BusinessUnit currentBU = findOneInternal(id);
         BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
         for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-            BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
+            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
             businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
         }
 
@@ -211,8 +210,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         if(prefList.size() > 0){ // we may force this size to be 1
             BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCP.next();
-                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
+                BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, iterBUCP.next());
                 currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
             }
             getService().update(currentBU);
@@ -291,9 +289,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
                             businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
 
                         }
-
                         bucpIndex++;
-
 
                     }
 
