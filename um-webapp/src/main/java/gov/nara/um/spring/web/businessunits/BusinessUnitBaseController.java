@@ -28,6 +28,11 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
         businessUnitDTO.setOrg_code(currentBU.getOrg_code());
         businessUnitDTO.setLdapName(currentBU.getLdapName());
 
+        for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
+            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
+            businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
+        }
+
         return businessUnitDTO;
     }
 

@@ -55,11 +55,6 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         for(Iterator<BusinessUnit> iterBU = findPaginatedAndSortedInternal(page, size, sortBy, sortOrder).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
             BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-            }
             returnList.add(businessUnitDTO);
 
         }
@@ -90,11 +85,6 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
             BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-            }
             returnList.add(businessUnitDTO);
 
         }
@@ -162,10 +152,6 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
 
         BusinessUnit currentBU = findOneInternal(id);
         BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-        for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-            BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());
-            businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-        }
 
         return businessUnitDTO;
     }
