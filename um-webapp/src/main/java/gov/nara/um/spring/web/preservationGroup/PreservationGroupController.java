@@ -2,6 +2,7 @@ package gov.nara.um.spring.web.preservationGroup;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ILongIdSortingController;
+import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.um.persistence.dto.GroupPermissionDTO;
 import gov.nara.um.persistence.dto.PreservationGroupDTO;
@@ -10,6 +11,7 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermissi
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,8 +83,7 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
         List<PreservationGroupDTO> returnList = new ArrayList<>();
         for(Iterator<PreservationGroup> iterPG = resultList.listIterator(); iterPG.hasNext();){
             PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(iterPG.next());
-
-           returnList.add(preservationGroupDTO);
+            returnList.add(preservationGroupDTO);
         }
 
         return  returnList;
@@ -99,11 +100,12 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public PreservationGroupDTO findOne(@PathVariable("id") final Long id) {
 
-       PreservationGroup preservationGroup = findOneInternal(id);
+       PreservationGroup preservationGroup = findOneGroupbyID(id);
        PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(preservationGroup);
        return preservationGroupDTO;
     }
@@ -129,21 +131,24 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
             createInternal(preservationGroup);
         }
         else {
-            throw new MyConflictException("a preservation group with this name already exsits.");
+            throw new MyConflictException("a preservation group with this name already exists.");
         }
 
         PreservationGroup newGroup = getService().findByName(resource.getGroup_name());
         if(newGroup != null){
-            for(Iterator<GroupPermissionDTO> iterPGP = resource.getGroupPermissions().listIterator(); iterPGP.hasNext();) {
+            for(Iterator<GroupPermissionDTO> iterPGP = resource.getGroup_permissions().listIterator(); iterPGP.hasNext();) {
 
                 GroupPermissionDTO groupPermissionDTO = iterPGP.next();
                 PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
                 preservationGroupPermission.setPreservationGroupID(newGroup);
-                preservationGroupPermission.setAssigningGroupID(getService().findOne(groupPermissionDTO.getAssigned_group_id()));
+                preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(groupPermissionDTO.getAssigned_group_id()));
                 preservationGroupPermission.setPermissionLevel(groupPermissionDTO.getPermission_level());
                 newGroup.addGroupPermission(preservationGroupPermission);
 
             }
+        }
+        else {
+            throw new MyBadRequestException("Resource could not be created. Database not available");
         }
 
         getService().update(newGroup);
@@ -160,7 +165,7 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
             getService().update(updateGroup);
         }
         else {
-            throw new MyConflictException("a preservation group with this name already exsits.");
+            throw new MyConflictException("a preservation group with this name already exists.");
         }
 
 

@@ -3,7 +3,6 @@ package gov.nara.common.web.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
 import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.web.RestPreconditions;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
@@ -26,6 +25,8 @@ public abstract class AbstractLongIdReadOnlyController<T extends IWithName> {
 
     protected final T findOneInternal(final Long id) {
         return RestPreconditions.checkNotNull(getService().findOne(id));
+
+
     }
 
     // find - all

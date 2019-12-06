@@ -83,8 +83,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         List<BusinessUnitDTO> returnList = new ArrayList<>();
 
         for(Iterator<BusinessUnit> iterBU = findPaginatedInternal(page,size).listIterator(); iterBU.hasNext(); ) {
-            BusinessUnit currentBU = iterBU.next();
-            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
+            BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(iterBU.next());
             returnList.add(businessUnitDTO);
 
         }

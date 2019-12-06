@@ -19,7 +19,6 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
     private IPreservationGroupService preservationGroupService;
 
 
-
     @Override
     protected IPreservationGroupService getService() {
         return preservationGroupService;
@@ -63,7 +62,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
         preservationGroup.setName(currentPGDTO.getGroup_name());
         preservationGroup.setGroup_description(currentPGDTO.getGroup_description());
 
-        for(Iterator<GroupPermissionDTO> iterPGPDTO = currentPGDTO.getGroupPermissions().listIterator(); iterPGPDTO.hasNext();){
+        for(Iterator<GroupPermissionDTO> iterPGPDTO = currentPGDTO.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
            PreservationGroupPermission preservationGroupPermission = buildPreservationGroupPermission( iterPGPDTO.next());
            preservationGroup.addGroupPermission(preservationGroupPermission);
         }
@@ -89,5 +88,21 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
        preservationGroupPermission.setPermissionLevel(currentPGPDTO.getPermission_level());
 
         return preservationGroupPermission;
+    }
+
+    public PreservationGroup findOneGroupbyID(Long id){
+
+        List<PreservationGroup> resultList = getService().findAll();
+        PreservationGroup returnGroup = null;
+        for(Iterator<PreservationGroup> iterPG = resultList.listIterator(); iterPG.hasNext();){
+
+            PreservationGroup currentPG = iterPG.next();
+            if(id == currentPG.getId()){
+                returnGroup = currentPG;
+            }
+        }
+
+        return returnGroup;
+
     }
 }

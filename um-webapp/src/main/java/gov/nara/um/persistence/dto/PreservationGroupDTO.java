@@ -13,11 +13,11 @@ public class PreservationGroupDTO {
     private String group_name;
     private String group_description;
 
-    private List<GroupPermissionDTO> groupPermissions = new ArrayList<>();
+    private List<GroupPermissionDTO> group_permissions = new ArrayList<>();
 
 
     public void addGroupPermission(GroupPermissionDTO groupPermissionDTO){
-        groupPermissions.add(groupPermissionDTO);
+        group_permissions.add(groupPermissionDTO);
     }
     public Long getGroup_id() {
         return group_id;
@@ -43,11 +43,11 @@ public class PreservationGroupDTO {
         this.group_description = group_description;
     }
 
-    public List<GroupPermissionDTO> getGroupPermissions() {
-        return groupPermissions;
+    public List<GroupPermissionDTO> getGroup_permissions() {
+        return group_permissions;
     }
 
-    public void setGroupPermissions(List<GroupPermissionDTO> groupPermissions) {
-        this.groupPermissions = groupPermissions;
+    public void setGroup_permissions(List<GroupPermissionDTO> group_permissions) {
+        this.group_permissions = group_permissions;
     }
 }

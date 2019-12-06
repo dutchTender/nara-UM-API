@@ -5,6 +5,6 @@ import gov.nara.common.interfaces.IWithName;
 
 public interface ILongIdService<T extends IWithName> extends ILongRawService<T>, IByNameApi<T> {
 
-    //
+
 
 }

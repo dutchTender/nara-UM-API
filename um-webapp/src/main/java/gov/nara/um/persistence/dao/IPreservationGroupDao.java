@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface IPreservationGroupDao  extends JpaRepository<PreservationGroup, Long>, JpaSpecificationExecutor<PreservationGroup>, IByNameApi<PreservationGroup> {
+
+            public PreservationGroup findByName(String name);
+
 }
