@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import gov.nara.common.interfaces.IWithName;
-import gov.nara.common.persistence.service.IRawService;
 import com.google.common.collect.Lists;
 
 public abstract class AbstractLongIdReadOnlyController<T extends IWithName> {
@@ -34,7 +33,7 @@ public abstract class AbstractLongIdReadOnlyController<T extends IWithName> {
     protected final List<T> findAllInternal(final HttpServletRequest request) {
         if (request.getParameterNames().hasMoreElements()) {
             throw new MyResourceNotFoundException();
-        }
+       }
 
         return getService().findAll();
     }

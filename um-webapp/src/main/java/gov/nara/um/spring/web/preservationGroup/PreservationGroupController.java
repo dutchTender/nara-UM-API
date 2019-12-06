@@ -47,6 +47,25 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
 
 
+    @Override
+    public List<PreservationGroup> findAllPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
+        return findPaginatedInternal(page, size);
+    }
+
+    @RequestMapping(params = { QueryConstants.PAGE, QueryConstants.SIZE }, method = RequestMethod.GET)
+    @ResponseBody
+    public List<PreservationGroupDTO> findAllPaginatedPG(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
+
+        List<PreservationGroupDTO> returnList = new ArrayList<>();
+
+        for(Iterator<PreservationGroup> iterPG = findPaginatedInternal(page,size).listIterator(); iterPG.hasNext(); ) {
+           PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(iterPG.next());
+           returnList.add(preservationGroupDTO);
+        }
+
+        return returnList;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,19 +80,7 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
         List<PreservationGroup> resultList =  findAllInternal(request);
         List<PreservationGroupDTO> returnList = new ArrayList<>();
         for(Iterator<PreservationGroup> iterPG = resultList.listIterator(); iterPG.hasNext();){
-            PreservationGroup preservationGroup = iterPG.next();
-            PreservationGroupDTO preservationGroupDTO = new PreservationGroupDTO();
-            preservationGroupDTO.setGroup_id(preservationGroup.getId());
-            preservationGroupDTO.setGroup_name(preservationGroup.getName());
-            preservationGroupDTO.setGroup_description(preservationGroup.getGroup_description());
-            for(Iterator<PreservationGroupPermission> iterPGP = preservationGroup.getInheritedGroups().listIterator(); iterPGP.hasNext();){
-                PreservationGroupPermission preservationGroupPermission = iterPGP.next();
-                GroupPermissionDTO groupPermissionDTO = new GroupPermissionDTO();
-                groupPermissionDTO.setGroup_id(preservationGroupPermission.getPreservationGroupID().getId());
-                groupPermissionDTO.setAssigned_group_id(preservationGroupPermission.getAssigningGroupID().getId());
-                groupPermissionDTO.setPermission_level(preservationGroupPermission.getPermissionLevel());
-                preservationGroupDTO.addGroupPermission(groupPermissionDTO);
-            }
+            PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(iterPG.next());
 
            returnList.add(preservationGroupDTO);
         }
@@ -85,9 +92,6 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     public List<PreservationGroup> findAll(HttpServletRequest request) {
         return findAllInternal(request);
     }
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,13 +180,11 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") final Long id) {
+
+
         deleteByIdInternal(id);
     }
 
-    @Override
-    public List<PreservationGroup> findAllPaginated(int page, int size) {
-        return null;
-    }
 
     @Override
     public List<PreservationGroup> findAllSorted(String sortBy, String sortOrder) {
