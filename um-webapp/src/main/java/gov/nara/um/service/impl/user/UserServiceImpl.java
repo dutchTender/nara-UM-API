@@ -2,7 +2,7 @@ package gov.nara.um.service.impl.user;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
 
-import gov.nara.um.persistence.dao.IUserJpaDao;
+import gov.nara.um.persistence.dao.user.IUserJpaDao;
 import gov.nara.um.persistence.model.bussinessUnits.User;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

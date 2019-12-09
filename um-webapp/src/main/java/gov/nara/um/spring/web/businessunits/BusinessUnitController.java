@@ -4,8 +4,8 @@ import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ISortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
-import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
-import gov.nara.um.persistence.dto.BusinessUnitDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
 import gov.nara.um.util.UmMappings;
@@ -185,12 +185,12 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         BusinessUnit businessUnit = new BusinessUnit();
         businessUnit.setName(resource.getName());
         businessUnit.setOrg_code(resource.getOrg_code());
-        businessUnit.setLdapName(resource.getLdapName());
+        businessUnit.setLdapName(resource.getLdap_name());
         createInternal(businessUnit);
 
         // business unit preference is required ....can be empty
         // if preference is not null in the DTO
-        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusinessUnitConfigPreferences();
+        List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusiness_unit_Preferences();
 
         if(prefList.size() > 0){ // we may force this size to be 1
             BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
@@ -239,9 +239,9 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         // build business unit object
         businessUnit.setName(resource.getName());
         businessUnit.setOrg_code(resource.getOrg_code());
-        businessUnit.setLdapName(resource.getLdapName());
+        businessUnit.setLdapName(resource.getLdap_name());
 
-        List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusinessUnitConfigPreferences();
+        List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusiness_unit_Preferences();
         List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
         if(prefListDTO.size() > 0) { // input preferences is not null
 

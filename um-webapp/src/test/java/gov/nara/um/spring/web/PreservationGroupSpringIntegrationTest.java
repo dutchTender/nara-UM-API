@@ -1,8 +1,7 @@
 package gov.nara.um.spring.web;
 
-import gov.nara.um.persistence.dao.IBusinessUnitDao;
+import gov.nara.um.persistence.dao.businessunits.IBusinessUnitDao;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
-import gov.nara.um.spring.web.UmPersistenceJpaConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -65,7 +65,8 @@ public class PreservationGroup implements ILongNameableEntity, ILongNameableDto 
 
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "preservationGroupID",
-            fetch = FetchType.EAGER)
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     private List<PreservationGroupPermission> inheritedGroups = new ArrayList<>();
 
 

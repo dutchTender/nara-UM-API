@@ -1,7 +1,7 @@
 package gov.nara.um.service.impl.businssunits;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
-import gov.nara.um.persistence.dao.IBusinessUnitConfigurationDao;
+import gov.nara.um.persistence.dao.businessunits.IBusinessUnitConfigurationDao;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfiguration;
 
 import gov.nara.um.service.bussinessunits.IBusinessUnitConfigurationService;

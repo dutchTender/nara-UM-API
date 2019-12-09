@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.dto;
+package gov.nara.um.persistence.dto.businessunits;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ public class BusinessUnitDTO {
 
     private String org_code;
 
-    private String ldapName;
+    private String ldap_name;
 
-    private List<BusinessUnitConfigPreferenceDTO> businessUnitConfigPreferences = new ArrayList<>();
+    private List<BusinessUnitConfigPreferenceDTO> business_unit_Preferences = new ArrayList<>();
 
     public Integer getId() {
         return Id;
@@ -28,9 +28,6 @@ public class BusinessUnitDTO {
         Id = id;
     }
 
-    public void setBusinessUnitConfigPreferences(List<BusinessUnitConfigPreferenceDTO> businessUnitConfigPreferencesDTOs) {
-        this.businessUnitConfigPreferences = businessUnitConfigPreferencesDTOs;
-    }
 
     public String getName() {
         return name;
@@ -48,20 +45,24 @@ public class BusinessUnitDTO {
         this.org_code = org_code;
     }
 
-    public String getLdapName() {
-        return ldapName;
+    public String getLdap_name() {
+        return ldap_name;
     }
 
-    public void setLdapName(String ldapName) {
-        this.ldapName = ldapName;
+    public void setLdap_name(String ldap_name) {
+        this.ldap_name = ldap_name;
     }
 
-    public List<BusinessUnitConfigPreferenceDTO> getBusinessUnitConfigPreferences() {
-        return businessUnitConfigPreferences;
+    public List<BusinessUnitConfigPreferenceDTO> getBusiness_unit_Preferences() {
+        return business_unit_Preferences;
+    }
+
+    public void setBusiness_unit_Preferences(List<BusinessUnitConfigPreferenceDTO> business_unit_Preferences) {
+        this.business_unit_Preferences = business_unit_Preferences;
     }
 
     public BusinessUnitConfigPreferenceDTO addBusinessUnitConfigPreferenceDTO(BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO){
-        this.businessUnitConfigPreferences.add(businessUnitConfigPreferenceDTO);
+        this.business_unit_Preferences.add(businessUnitConfigPreferenceDTO);
         return  businessUnitConfigPreferenceDTO;
     }
 

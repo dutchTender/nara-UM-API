@@ -1,7 +1,7 @@
 package gov.nara.um.service.impl.businssunits;
 
 import gov.nara.common.persistence.service.AbstractService;
-import gov.nara.um.persistence.dao.IBusinessUnitDao;
+import gov.nara.um.persistence.dao.businessunits.IBusinessUnitDao;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import org.springframework.beans.factory.annotation.Autowired;

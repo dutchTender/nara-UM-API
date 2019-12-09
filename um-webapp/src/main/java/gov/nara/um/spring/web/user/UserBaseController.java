@@ -3,8 +3,8 @@ package gov.nara.um.spring.web.user;
 import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.persistence.service.IRawService;
 import gov.nara.common.web.controller.AbstractLongIdController;
-import gov.nara.um.persistence.dto.BusinessUnitDTO;
-import gov.nara.um.persistence.dto.UserDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
+import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
@@ -51,7 +51,7 @@ public class UserBaseController extends AbstractLongIdController<User> {
         businessUnitDTO.setId(currentBU.getId());
         businessUnitDTO.setName(currentBU.getName());
         businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-        businessUnitDTO.setLdapName(currentBU.getLdapName());
+        businessUnitDTO.setLdap_name(currentBU.getLdapName());
 
         return businessUnitDTO;
     }

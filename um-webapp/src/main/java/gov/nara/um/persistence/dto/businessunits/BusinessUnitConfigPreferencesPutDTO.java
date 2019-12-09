@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.dto;
+package gov.nara.um.persistence.dto.businessunits;
 
 import java.util.ArrayList;
 import java.util.List;

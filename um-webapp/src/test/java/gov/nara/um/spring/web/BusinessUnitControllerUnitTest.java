@@ -1,8 +1,7 @@
 package gov.nara.um.spring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.nara.um.persistence.dto.BusinessUnitDTO;
-import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 
 
@@ -79,7 +78,7 @@ public class BusinessUnitControllerUnitTest {
 
         BusinessUnitDTO test_unit = new BusinessUnitDTO();
         test_unit.setName("apex");
-        test_unit.setLdapName("grant thornton");
+        test_unit.setLdap_name("grant thornton");
         test_unit.setOrg_code("NARA a2");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -102,7 +101,7 @@ public class BusinessUnitControllerUnitTest {
 
         BusinessUnitDTO test_unit = new BusinessUnitDTO();
         test_unit.setName("apex");
-        test_unit.setLdapName("grant thornton");
+        test_unit.setLdap_name("grant thornton");
         test_unit.setOrg_code("NARA a2");
 
         ObjectMapper objectMapper = new ObjectMapper();

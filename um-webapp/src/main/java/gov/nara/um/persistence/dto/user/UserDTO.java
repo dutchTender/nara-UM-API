@@ -1,6 +1,7 @@
-package gov.nara.um.persistence.dto;
+package gov.nara.um.persistence.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 
 import java.util.ArrayList;
 import java.util.List;

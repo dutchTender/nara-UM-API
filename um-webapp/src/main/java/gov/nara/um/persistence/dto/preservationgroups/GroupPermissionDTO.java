@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.dto;
+package gov.nara.um.persistence.dto.preservationgroups;
 
 public class GroupPermissionDTO {
 

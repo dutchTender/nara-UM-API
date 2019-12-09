@@ -4,7 +4,7 @@ package gov.nara.um.spring.web.businessunits;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
-import gov.nara.um.persistence.dto.UserDTO;
+import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.User;
 import gov.nara.um.spring.web.user.UserBaseController;

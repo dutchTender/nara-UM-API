@@ -1,8 +1,8 @@
 package gov.nara.um.spring.web.businessunits;
 
 import gov.nara.common.web.controller.AbstractController;
-import gov.nara.um.persistence.dto.BusinessUnitConfigPreferenceDTO;
-import gov.nara.um.persistence.dto.BusinessUnitDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfigurationPreference;
 import gov.nara.um.service.bussinessunits.IBusinessUnitConfigurationService;
@@ -26,7 +26,7 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
         businessUnitDTO.setId(currentBU.getId());
         businessUnitDTO.setName(currentBU.getName());
         businessUnitDTO.setOrg_code(currentBU.getOrg_code());
-        businessUnitDTO.setLdapName(currentBU.getLdapName());
+        businessUnitDTO.setLdap_name(currentBU.getLdapName());
 
         for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
             BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(iterBUCP.next());

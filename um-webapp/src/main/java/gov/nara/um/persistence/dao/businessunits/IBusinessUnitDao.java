@@ -1,4 +1,4 @@
-package gov.nara.um.persistence.dao;
+package gov.nara.um.persistence.dao.businessunits;
 
 import gov.nara.common.interfaces.IByNameApi;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;

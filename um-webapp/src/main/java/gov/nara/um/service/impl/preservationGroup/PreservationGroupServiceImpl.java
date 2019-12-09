@@ -1,7 +1,7 @@
 package gov.nara.um.service.impl.preservationGroup;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
-import gov.nara.um.persistence.dao.IPreservationGroupDao;
+import gov.nara.um.persistence.dao.preservationgroups.IPreservationGroupDao;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.service.preservationGroup.IPreservationGroupService;
 import org.springframework.beans.factory.annotation.Autowired;

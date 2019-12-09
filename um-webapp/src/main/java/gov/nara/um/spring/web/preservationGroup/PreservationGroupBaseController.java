@@ -1,8 +1,8 @@
 package gov.nara.um.spring.web.preservationGroup;
 
 import gov.nara.common.web.controller.AbstractLongIdController;
-import gov.nara.um.persistence.dto.GroupPermissionDTO;
-import gov.nara.um.persistence.dto.PreservationGroupDTO;
+import gov.nara.um.persistence.dto.preservationgroups.GroupPermissionDTO;
+import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.service.preservationGroup.IPreservationGroupService;
@@ -24,7 +24,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
         return preservationGroupService;
     }
 
-    public List<PreservationGroupDTO> buildPrservationGroupDTOList(List<PreservationGroup> preservationGroupList){
+    protected List<PreservationGroupDTO> buildPrservationGroupDTOList(List<PreservationGroup> preservationGroupList){
         List<PreservationGroupDTO> returnList = new ArrayList<>();
 
         for(Iterator<PreservationGroup> iterPG = preservationGroupList.listIterator(); iterPG.hasNext(); ) {
@@ -39,7 +39,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
 
 
 
-    public PreservationGroupDTO buildPreservationGroupDTO(PreservationGroup currentPG){
+    protected PreservationGroupDTO buildPreservationGroupDTO(PreservationGroup currentPG){
 
         PreservationGroupDTO preservationGroupDTO = new PreservationGroupDTO();
         preservationGroupDTO.setGroup_id(currentPG.getId());
@@ -55,7 +55,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
     }
 
 
-    public PreservationGroup buildPreservationGroup(PreservationGroupDTO currentPGDTO){
+    protected PreservationGroup buildPreservationGroup(PreservationGroupDTO currentPGDTO){
 
         PreservationGroup preservationGroup = new PreservationGroup();
         preservationGroup.setId(currentPGDTO.getGroup_id());
@@ -71,7 +71,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
     }
 
 
-    public GroupPermissionDTO buildPreservationGroupPermissionDTO(PreservationGroupPermission currentPGP){
+    protected GroupPermissionDTO buildPreservationGroupPermissionDTO(PreservationGroupPermission currentPGP){
         GroupPermissionDTO groupPermissionDTO = new GroupPermissionDTO();
         groupPermissionDTO.setGroup_id(currentPGP.getPreservationGroupID().getId());
         groupPermissionDTO.setAssigned_group_id(currentPGP.getAssigningGroupID().getId());
@@ -81,7 +81,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
     }
 
 
-    public PreservationGroupPermission buildPreservationGroupPermission(GroupPermissionDTO currentPGPDTO){
+   protected PreservationGroupPermission buildPreservationGroupPermission(GroupPermissionDTO currentPGPDTO){
        PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
        preservationGroupPermission.setAssigningGroupID(getService().findOne(currentPGPDTO.getAssigned_group_id()));
        preservationGroupPermission.setPreservationGroupID(getService().findOne(currentPGPDTO.getGroup_id()));
@@ -90,7 +90,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
         return preservationGroupPermission;
     }
 
-    public PreservationGroup findOneGroupbyID(Long id){
+    protected PreservationGroup findOneGroupbyID(Long id){
 
         List<PreservationGroup> resultList = getService().findAll();
         PreservationGroup returnGroup = null;
@@ -99,6 +99,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
             PreservationGroup currentPG = iterPG.next();
             if(id == currentPG.getId()){
                 returnGroup = currentPG;
+                break;
             }
         }
 

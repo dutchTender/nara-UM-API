@@ -4,16 +4,17 @@ import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ILongIdSortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
-import gov.nara.um.persistence.dto.GroupPermissionDTO;
-import gov.nara.um.persistence.dto.PreservationGroupDTO;
+import gov.nara.common.web.exception.MyResourceNotFoundException;
+import gov.nara.um.persistence.dto.preservationgroups.GroupPermissionDTO;
+import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -106,6 +107,10 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     public PreservationGroupDTO findOne(@PathVariable("id") final Long id) {
 
        PreservationGroup preservationGroup = findOneGroupbyID(id);
+
+       if(preservationGroup == null){
+           throw new EntityNotFoundException("preservation group with that id does not exists.");
+       }
        PreservationGroupDTO preservationGroupDTO = buildPreservationGroupDTO(preservationGroup);
        return preservationGroupDTO;
     }
@@ -135,6 +140,8 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
         }
 
         PreservationGroup newGroup = getService().findByName(resource.getGroup_name());
+
+
         if(newGroup != null){
             for(Iterator<GroupPermissionDTO> iterPGP = resource.getGroup_permissions().listIterator(); iterPGP.hasNext();) {
 
@@ -155,17 +162,50 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody final PreservationGroupDTO resource) {
+    public void update(@PathVariable("id") final Long id, @RequestBody final PreservationGroupDTO resource) {
 
-     PreservationGroup  updateGroup = buildPreservationGroup(resource);
+        PreservationGroup targetGroup = findOneGroupbyID(id);
+        PreservationGroup resourceGroup = getService().findByName(resource.getGroup_name());
+        if(targetGroup != null){ // update id retrieved valid preservation group
+             // check sums
+             if(resourceGroup != null ){
+                 if(resourceGroup.getId() != id){
+                     throw new MyConflictException("another preservation group already uses this name.");
+                 }
 
-        if(getService().findByName(resource.getGroup_name()) == null){
-            getService().update(updateGroup);
+             }
+            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            // no name conflict ...start updating
+            targetGroup.setName(resource.getGroup_name());
+            targetGroup.setGroup_description(resource.getGroup_description());
+
+            targetGroup.getInheritedGroups().clear();
+            getService().update(targetGroup);
+
+
+            // existing preferences empty. just need to add new preferences
+            // create busienss preference and add it to business unit
+
+
+             for(Iterator<GroupPermissionDTO> iterPGPDTO  = resource.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
+                 GroupPermissionDTO groupPermissionDTO = iterPGPDTO.next();
+                 PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
+                 preservationGroupPermission.setPreservationGroupID(findOneGroupbyID(id));
+                 preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(groupPermissionDTO.getAssigned_group_id()));
+                 preservationGroupPermission.setPermissionLevel(groupPermissionDTO.getPermission_level());
+                 targetGroup.addGroupPermission(preservationGroupPermission);
+             }
+
+
+             getService().update(targetGroup);
+
+
+
         }
         else {
-            throw new MyConflictException("a preservation group with this name already exists.");
+            throw new MyResourceNotFoundException("the id for preservation group is not valid.");
         }
 
 
