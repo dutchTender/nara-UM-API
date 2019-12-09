@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -162,6 +163,8 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     }
 
 
+
+    @Transactional
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("id") final Long id, @RequestBody final PreservationGroupDTO resource) {
@@ -176,18 +179,15 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
                  }
 
              }
-            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
             // no name conflict ...start updating
             targetGroup.setName(resource.getGroup_name());
             targetGroup.setGroup_description(resource.getGroup_description());
-
             targetGroup.getInheritedGroups().clear();
             getService().update(targetGroup);
 
-
             // existing preferences empty. just need to add new preferences
             // create busienss preference and add it to business unit
-
 
              for(Iterator<GroupPermissionDTO> iterPGPDTO  = resource.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
                  GroupPermissionDTO groupPermissionDTO = iterPGPDTO.next();
