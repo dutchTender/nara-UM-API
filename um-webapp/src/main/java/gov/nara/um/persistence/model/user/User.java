@@ -1,10 +1,11 @@
-package gov.nara.um.persistence.model.bussinessUnits;
+package gov.nara.um.persistence.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gov.nara.common.interfaces.ILongNameableDto;
 import gov.nara.common.persistence.model.ILongNameableEntity;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
@@ -19,8 +20,8 @@ import java.util.Set;
 @Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-//@Table(name = "user", schema = "oif_ods")
-@Table(name = "user")
+@Table(name = "user", schema = "oif_ods")
+//@Table(name = "user")
 public class User implements ILongNameableEntity, ILongNameableDto {
 
 
@@ -54,17 +55,50 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     @OneToMany
     private Set<BusinessUnit> businessUnits;
 
+
+
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(
+                    name = "user_id",
+                    referencedColumnName = "user_id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "group_id",
+                    referencedColumnName = "group_id"
+            )
+    )
+    @OneToMany
+    private Set<PreservationGroup> preservationGroups;
+
+
     public Set<BusinessUnit> getBusinessUnits() {
         return businessUnits;
     }
-
-    public BusinessUnit addBusinessUnit(BusinessUnit businessUnit){ businessUnits.add(businessUnit);return businessUnit; }
-
-    public void removeBusinessUnit(BusinessUnit businessUnit){ businessUnits.remove(businessUnit); }
-
     public void setBusinessUnits(Set<BusinessUnit> businessUnits) {
         this.businessUnits = businessUnits;
     }
+    public BusinessUnit addBusinessUnit(BusinessUnit businessUnit){ businessUnits.add(businessUnit);return businessUnit; }
+    public void removeBusinessUnit(BusinessUnit businessUnit){ businessUnits.remove(businessUnit); }
+
+
+
+    public Set<PreservationGroup> getPreservationGroups() {
+        return preservationGroups;
+    }
+
+    public void setPreservationGroups(Set<PreservationGroup> preservationGroups) {
+        this.preservationGroups = preservationGroups;
+    }
+    public PreservationGroup addPreservationGroup(PreservationGroup preservationGroup){
+        preservationGroups.add(preservationGroup);
+        return  preservationGroup;
+    }
+    public void removePreservationGroup(PreservationGroup preservationGroup){
+        preservationGroups.remove(preservationGroup);
+    }
+
+
 
     @Override
     public void setId(Long id) { this.id = id; }

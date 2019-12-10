@@ -1,7 +1,7 @@
 package gov.nara.um.persistence.setup;
 
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
-import gov.nara.um.persistence.model.bussinessUnits.User;
+import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import gov.nara.um.service.user.IUserService;
 import org.slf4j.Logger;
