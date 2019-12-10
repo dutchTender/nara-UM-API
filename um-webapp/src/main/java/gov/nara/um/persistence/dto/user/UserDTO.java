@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@JsonPropertyOrder({ "id", "name", "user_type", "business_units", "preservation_groups" })
+@JsonPropertyOrder({ "user_id", "name", "user_type", "business_units", "preservation_groups" })
 public class UserDTO {
 
-    private Long Id;
+    private Long user_id;
 
     private String name;
 
@@ -25,12 +25,12 @@ public class UserDTO {
         preservation_groups.add(preservationGroupDTO);
     }
 
-    public Long getId() {
-        return Id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setId(Long id) {
-        Id = id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public String getName() {
