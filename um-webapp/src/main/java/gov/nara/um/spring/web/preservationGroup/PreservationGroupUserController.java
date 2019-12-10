@@ -1,13 +1,11 @@
-package gov.nara.um.spring.web.businessunits;
-
-
+package gov.nara.um.spring.web.preservationGroup;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.user.UserDTO;
-import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.user.User;
-import gov.nara.um.service.bussinessunits.IBusinessUnitService;
+import gov.nara.um.service.preservationGroup.IPreservationGroupService;
 import gov.nara.um.spring.web.user.UserBaseController;
 import gov.nara.um.util.UmMappings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +19,12 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = UmMappings.BUSINESSUNITS_USERS)
-public class BusinessUnitUserController extends UserBaseController {
+@RequestMapping(value = UmMappings.PERSERVATIONGROUPS_USERS)
+public class PreservationGroupUserController extends UserBaseController {
 
 
     @Autowired
-    private IBusinessUnitService businessUnitService;
+    private IPreservationGroupService preservationGroupServices;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
@@ -39,14 +37,13 @@ public class BusinessUnitUserController extends UserBaseController {
     @ResponseBody
     public List<UserDTO> findAllPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size) {
 
-            List<UserDTO> returnList = new ArrayList<>();
-
-            List<User>  userList =  findPaginatedInternal(page,size);
-            // build return list by looping through all users
-            for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
-                returnList.add(buildUserDTO(iterUser.next()));
-            }
-            return returnList;
+        List<UserDTO> returnList = new ArrayList<>();
+        List<User>  userList =  findPaginatedInternal(page,size);
+        // build return list by looping through all users
+        for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
+            returnList.add(buildUserDTO(iterUser.next()));
+        }
+        return returnList;
     }
 
 
@@ -55,14 +52,13 @@ public class BusinessUnitUserController extends UserBaseController {
     @ResponseBody
     public List<UserDTO> findAllSorted(@RequestParam(value = QueryConstants.SORT_BY) final String sortBy, @RequestParam(value = QueryConstants.SORT_ORDER) final String sortOrder) {
 
-            List<UserDTO> returnList = new ArrayList<>();
-
-            List<User>  userList =  findAllSortedInternal(sortBy, sortOrder);
-            // build return list by looping through all users
-            for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
-                returnList.add(buildUserDTO(iterUser.next()));
-            }
-            return returnList;
+        List<UserDTO> returnList = new ArrayList<>();
+        List<User>  userList =  findAllSortedInternal(sortBy, sortOrder);
+        // build return list by looping through all users
+        for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
+            returnList.add(buildUserDTO(iterUser.next()));
+        }
+        return returnList;
 
     }
 
@@ -80,7 +76,6 @@ public class BusinessUnitUserController extends UserBaseController {
 
         // return all users that belongs to any business unit
         List<UserDTO> returnList = new ArrayList<>();
-
         List<User>  userList = getService().findAll();
         // build return list by looping through all users
         for(Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
@@ -102,15 +97,13 @@ public class BusinessUnitUserController extends UserBaseController {
     public List<UserDTO> findOne(@PathVariable("id") final Long id) {
         // return all users that belongs to a business unit
         List<UserDTO> returnList = new ArrayList<>();
-        BusinessUnit businessUnit = getBusinessUnitService().findOne(id.intValue());
+        PreservationGroup  preservationGroup = getPreservationGroupServices().findOne(id);
         List<User>  userList = getService().findAll();
         // build return list by looping through all users
-        if(businessUnit != null) {
+        if(preservationGroup != null) {
             for (Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
-                // check if user is in business unit
                 User user = iterUser.next();
-
-                if(user.getBusinessUnits().contains(businessUnit)) {
+                if(user.getPreservationGroups().contains(preservationGroup)) {
                     returnList.add(buildUserDTO(user));
                 }
             }
@@ -125,11 +118,11 @@ public class BusinessUnitUserController extends UserBaseController {
     }
 
 
-    public IBusinessUnitService getBusinessUnitService() {
-        return businessUnitService;
+    public IPreservationGroupService getPreservationGroupServices() {
+        return preservationGroupServices;
     }
 
-    public void setBusinessUnitService(IBusinessUnitService businessUnitService) {
-        this.businessUnitService = businessUnitService;
+    public void setPreservationGroupServices(IPreservationGroupService preservationGroupServices) {
+        this.preservationGroupServices = preservationGroupServices;
     }
 }

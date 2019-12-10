@@ -6,7 +6,7 @@ public final class UmMappings {
 
     public static final String BUSINESSUNITS = "business-units";
     public static final String PERSERVATIONGROUPS = "preservation-groups";
-
+    public static final String PERSERVATIONGROUPS_USERS = "preservation-groups/users";
     public static final String BUSINESSUNITS_USERS = "business-units/users";
 
     public static final String BUSINESSUNITS_CONFIGURATIONS_PREFERENCES = "business-units/preferences";

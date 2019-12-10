@@ -12,6 +12,7 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
+import gov.nara.um.service.preservationGroup.IPreservationGroupService;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,8 +24,7 @@ public class UserBaseController extends AbstractLongIdController<User> {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private IBusinessUnitService businessUnitService;
+
 
 
     @Override
@@ -32,8 +32,10 @@ public class UserBaseController extends AbstractLongIdController<User> {
         return userService;
     }
 
-    protected IRawService<BusinessUnit> getBusinessUnitService() {
-        return businessUnitService;
+
+
+    public IUserService getUserService() {
+        return userService;
     }
 
 
