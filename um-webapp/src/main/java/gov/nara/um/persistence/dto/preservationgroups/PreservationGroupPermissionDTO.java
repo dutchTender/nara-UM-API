@@ -1,6 +1,6 @@
 package gov.nara.um.persistence.dto.preservationgroups;
 
-public class GroupPermissionDTO {
+public class PreservationGroupPermissionDTO {
 
     private Long group_id;
     private Long assigned_group_id;

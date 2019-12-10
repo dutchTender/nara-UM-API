@@ -5,7 +5,7 @@ import gov.nara.common.web.controller.ILongIdSortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
-import gov.nara.um.persistence.dto.preservationgroups.GroupPermissionDTO;
+import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupPermissionDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
@@ -144,13 +144,13 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
 
         if(newGroup != null){
-            for(Iterator<GroupPermissionDTO> iterPGP = resource.getGroup_permissions().listIterator(); iterPGP.hasNext();) {
+            for(Iterator<PreservationGroupPermissionDTO> iterPGP = resource.getGroup_permissions().listIterator(); iterPGP.hasNext();) {
 
-                GroupPermissionDTO groupPermissionDTO = iterPGP.next();
+                PreservationGroupPermissionDTO preservationGroupPermissionDTO = iterPGP.next();
                 PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
                 preservationGroupPermission.setPreservationGroupID(newGroup);
-                preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(groupPermissionDTO.getAssigned_group_id()));
-                preservationGroupPermission.setPermissionLevel(groupPermissionDTO.getPermission_level());
+                preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(preservationGroupPermissionDTO.getAssigned_group_id()));
+                preservationGroupPermission.setPermissionLevel(preservationGroupPermissionDTO.getPermission_level());
                 newGroup.addGroupPermission(preservationGroupPermission);
 
             }
@@ -189,12 +189,12 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
             // existing preferences empty. just need to add new preferences
             // create busienss preference and add it to business unit
 
-             for(Iterator<GroupPermissionDTO> iterPGPDTO  = resource.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
-                 GroupPermissionDTO groupPermissionDTO = iterPGPDTO.next();
+             for(Iterator<PreservationGroupPermissionDTO> iterPGPDTO = resource.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
+                 PreservationGroupPermissionDTO preservationGroupPermissionDTO = iterPGPDTO.next();
                  PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
                  preservationGroupPermission.setPreservationGroupID(findOneGroupbyID(id));
-                 preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(groupPermissionDTO.getAssigned_group_id()));
-                 preservationGroupPermission.setPermissionLevel(groupPermissionDTO.getPermission_level());
+                 preservationGroupPermission.setAssigningGroupID(findOneGroupbyID(preservationGroupPermissionDTO.getAssigned_group_id()));
+                 preservationGroupPermission.setPermissionLevel(preservationGroupPermissionDTO.getPermission_level());
                  targetGroup.addGroupPermission(preservationGroupPermission);
              }
 

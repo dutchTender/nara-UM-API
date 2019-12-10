@@ -245,50 +245,14 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
         if(prefListDTO.size() > 0) { // input preferences is not null
 
-            if(preferencesList.size() > 0){  // existing preferences is not empty
-
-                for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
-                    BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
-                    Integer bucpIndex = 0;
-                    Integer currentPreferenceSize = businessUnit.getBusinessUnitConfigurationPreferences().size();
-                    for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = businessUnit.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                        // check if preferences that needs update
-
-                        if(bucpIndex <= currentPreferenceSize){
-                            // verify that the DTO ids match the actual object
-                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = iterBUCP.next();
-
-                            // business unit ids is implicitly supplied ..only need to verify config idp
-                            if(businessUnitConfigurationPreference.getBusinessUnitConfigID().getId() == businessUnitConfigPreferenceDTO.getBusiness_unit_config_id()){
-                                businessUnitConfigurationPreference.setConfigurationValue(businessUnitConfigPreferenceDTO.getConfiguration_value());
-                                businessUnit.getBusinessUnitConfigurationPreferences().set(bucpIndex, businessUnitConfigurationPreference);
-                            }
-                            else{
-                                throw new MyBadRequestException("only configuration value is allowed to be updated. not the configuration id key");
-                            }
-
-                        }
-                        else {
-
-                            BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
-                            businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-
-                        }
-                        bucpIndex++;
-
-                    }
-
-                }
-            }
-            else {
+                businessUnit.getBusinessUnitConfigurationPreferences().clear();
                 // existing preferences empty. just need to add new preferences
                 // create busienss preference and add it to business unit
+                getService().update(businessUnit);
                 for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
                     BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();
                     BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, businessUnitConfigPreferenceDTO);
                     businessUnit.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
-                }
-
             }
 
             getService().update(businessUnit);

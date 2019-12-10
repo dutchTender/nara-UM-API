@@ -26,6 +26,10 @@ public class RedirectController {
         return singularToPlural(request);
     }
 
+    @RequestMapping(value = UmMappings.Singular.PRESERVATIONGROUP )
+    public ResponseEntity<Void> preservationGroupToPreservationGroups(final HttpServletRequest request) {
+        return singularToPlural(request);
+    }
     // util
 
     private final ResponseEntity<Void> singularToPlural(final HttpServletRequest request) {
