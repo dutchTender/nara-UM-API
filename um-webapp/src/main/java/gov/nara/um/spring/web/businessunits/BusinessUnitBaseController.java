@@ -65,11 +65,7 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
         for(Iterator<BusinessUnit> iterBU = businessUnitList.listIterator(); iterBU.hasNext(); ) {
             BusinessUnit currentBU = iterBU.next();
             BusinessUnitDTO businessUnitDTO = buildBusinessUnitDTO(currentBU);
-            for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){
-                BusinessUnitConfigurationPreference currentBUCP = iterBUCP.next();
-                BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = buildBusinessConfigPreferenceDTO(currentBUCP);
-                businessUnitDTO.addBusinessUnitConfigPreferenceDTO(businessUnitConfigPreferenceDTO);
-            }
+
             returnList.add(businessUnitDTO);
 
         }
