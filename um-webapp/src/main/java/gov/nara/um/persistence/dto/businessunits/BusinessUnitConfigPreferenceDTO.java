@@ -2,7 +2,7 @@ package gov.nara.um.persistence.dto.businessunits;
 
 public class BusinessUnitConfigPreferenceDTO {
 
-    private Integer business_unit_id;
+
 
     private Long business_unit_config_id;
 
@@ -13,13 +13,6 @@ public class BusinessUnitConfigPreferenceDTO {
     public BusinessUnitConfigPreferenceDTO() {
     }
 
-    public Integer getBusiness_unit_id() {
-        return business_unit_id;
-    }
-
-    public void setBusiness_unit_id(Integer business_unit_id) {
-        this.business_unit_id = business_unit_id;
-    }
 
     public Long getBusiness_unit_config_id() {
         return business_unit_config_id;

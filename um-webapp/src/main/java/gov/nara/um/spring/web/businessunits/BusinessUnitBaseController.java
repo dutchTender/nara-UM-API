@@ -38,7 +38,7 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
 
     public BusinessUnitConfigPreferenceDTO buildBusinessConfigPreferenceDTO(BusinessUnitConfigurationPreference currentBUCP){
         BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = new BusinessUnitConfigPreferenceDTO();
-        businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
+        //businessUnitConfigPreferenceDTO.setBusiness_unit_id(currentBUCP.getBusinessUnitID().getId());
         businessUnitConfigPreferenceDTO.setBusiness_unit_config_id(currentBUCP.getBusinessUnitConfigID().getId());
         businessUnitConfigPreferenceDTO.setConfiguration_value(currentBUCP.getConfigurationValue());
         return businessUnitConfigPreferenceDTO;
