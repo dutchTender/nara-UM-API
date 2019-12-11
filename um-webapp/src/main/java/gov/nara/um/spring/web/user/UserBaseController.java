@@ -71,7 +71,7 @@ public class UserBaseController extends AbstractLongIdController<User> {
         for(Iterator<PreservationGroupPermission> iterPGP = preservationGroup.getInheritedGroups().iterator(); iterPGP.hasNext();) {
             PreservationGroupPermission preservationGroupPermission = iterPGP.next();
             PreservationGroupPermissionDTO preservationGroupPermissionDTO = new PreservationGroupPermissionDTO();
-            preservationGroupPermissionDTO.setGroup_id(preservationGroupPermission.getPreservationGroupID().getId());
+            //preservationGroupPermissionDTO.setGroup_id(preservationGroupPermission.getPreservationGroupID().getId());
             preservationGroupPermissionDTO.setAssigned_group_id(preservationGroupPermission.getAssigningGroupID().getId());
             preservationGroupPermissionDTO.setPermission_level(preservationGroupPermission.getPermissionLevel());
             preservationGroupDTO.addGroupPermission(preservationGroupPermissionDTO);

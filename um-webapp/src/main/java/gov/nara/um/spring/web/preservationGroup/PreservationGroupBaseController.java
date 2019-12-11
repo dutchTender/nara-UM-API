@@ -63,7 +63,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
         preservationGroup.setGroup_description(currentPGDTO.getGroup_description());
 
         for(Iterator<PreservationGroupPermissionDTO> iterPGPDTO = currentPGDTO.getGroup_permissions().listIterator(); iterPGPDTO.hasNext();){
-           PreservationGroupPermission preservationGroupPermission = buildPreservationGroupPermission( iterPGPDTO.next());
+           PreservationGroupPermission preservationGroupPermission = buildPreservationGroupPermission( iterPGPDTO.next(),  preservationGroup);
            preservationGroup.addGroupPermission(preservationGroupPermission);
         }
         return preservationGroup;
@@ -73,7 +73,7 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
 
     protected PreservationGroupPermissionDTO buildPreservationGroupPermissionDTO(PreservationGroupPermission currentPGP){
         PreservationGroupPermissionDTO preservationGroupPermissionDTO = new PreservationGroupPermissionDTO();
-        preservationGroupPermissionDTO.setGroup_id(currentPGP.getPreservationGroupID().getId());
+        //preservationGroupPermissionDTO.setGroup_id(currentPGP.getPreservationGroupID().getId());
         preservationGroupPermissionDTO.setAssigned_group_id(currentPGP.getAssigningGroupID().getId());
         preservationGroupPermissionDTO.setPermission_level(currentPGP.getPermissionLevel());
 
@@ -81,10 +81,10 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
     }
 
 
-   protected PreservationGroupPermission buildPreservationGroupPermission(PreservationGroupPermissionDTO currentPGPDTO){
+   protected PreservationGroupPermission buildPreservationGroupPermission(PreservationGroupPermissionDTO currentPGPDTO, PreservationGroup preservationGroup){
        PreservationGroupPermission preservationGroupPermission = new PreservationGroupPermission();
        preservationGroupPermission.setAssigningGroupID(getService().findOne(currentPGPDTO.getAssigned_group_id()));
-       preservationGroupPermission.setPreservationGroupID(getService().findOne(currentPGPDTO.getGroup_id()));
+       preservationGroupPermission.setPreservationGroupID(preservationGroup);
        preservationGroupPermission.setPermissionLevel(currentPGPDTO.getPermission_level());
 
         return preservationGroupPermission;
