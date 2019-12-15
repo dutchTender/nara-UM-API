@@ -41,19 +41,28 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     private Long businessunit_id;
 
 
-    @JoinTable(
-            name = "user_business_unit",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "user_id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "business_unit_id",
-                    referencedColumnName = "id"
-            )
+    @OneToMany(
+            mappedBy = "userID",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
-    @OneToMany
-    private Set<BusinessUnit> businessUnits;
+    private Set<UserBusinessUnit> userBusinessUnits;
+
+    public Set<UserBusinessUnit> getUserBusinessUnits() {
+        return userBusinessUnits;
+    }
+
+    public void setUserBusinessUnits(Set<UserBusinessUnit> userBusinessUnits) {
+        this.userBusinessUnits = userBusinessUnits;
+    }
+    public UserBusinessUnit addUserBusinessUnit(UserBusinessUnit userBusinessUnit){
+        userBusinessUnits.add(userBusinessUnit);
+        return userBusinessUnit;
+    }
+    public void removeUserBusienssUnit(UserBusinessUnit userBusinessUnit){
+        userBusinessUnits.remove(userBusinessUnit);
+    }
+
 
 
 
@@ -70,17 +79,6 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     )
     @OneToMany
     private Set<PreservationGroup> preservationGroups;
-
-
-    public Set<BusinessUnit> getBusinessUnits() {
-        return businessUnits;
-    }
-    public void setBusinessUnits(Set<BusinessUnit> businessUnits) {
-        this.businessUnits = businessUnits;
-    }
-    public BusinessUnit addBusinessUnit(BusinessUnit businessUnit){ businessUnits.add(businessUnit);return businessUnit; }
-    public void removeBusinessUnit(BusinessUnit businessUnit){ businessUnits.remove(businessUnit); }
-
 
 
     public Set<PreservationGroup> getPreservationGroups() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@JsonPropertyOrder({ "business_unit_id", "name", "org_code", "ldapName", "businessUnitConfigPreferences" })
+@JsonPropertyOrder({ "business_unit_id", "name", "org_code", "ldapName", "business_unit_Preferences" })
 public class BusinessUnitDTO {
 
 

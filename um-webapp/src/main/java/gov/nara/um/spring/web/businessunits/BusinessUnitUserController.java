@@ -7,6 +7,7 @@ import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.user.User;
+import gov.nara.um.persistence.model.user.UserBusinessUnit;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import gov.nara.um.spring.web.user.UserBaseController;
 import gov.nara.um.util.UmMappings;
@@ -109,10 +110,13 @@ public class BusinessUnitUserController extends UserBaseController {
             for (Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
                 // check if user is in business unit
                 User user = iterUser.next();
-
-                if(user.getBusinessUnits().contains(businessUnit)) {
-                    returnList.add(buildUserDTO(user));
+                for (Iterator<UserBusinessUnit> iterUserBU = user.getUserBusinessUnits().iterator(); iterUserBU.hasNext(); ) {
+                    UserBusinessUnit userBusinessUnit = iterUserBU.next();
+                    if((userBusinessUnit.getBusinessUnitID().getId() == id.intValue())) {
+                        returnList.add(buildUserDTO(user));
+                    }
                 }
+
             }
         }
         else {
