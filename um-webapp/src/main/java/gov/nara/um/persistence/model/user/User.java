@@ -48,6 +48,16 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     )
     private Set<UserBusinessUnit> userBusinessUnits;
 
+
+
+    @OneToMany(
+            mappedBy = "userID",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<UserPreservationGroup> userPreservationGroups;
+
+
     public Set<UserBusinessUnit> getUserBusinessUnits() {
         return userBusinessUnits;
     }
@@ -65,38 +75,21 @@ public class User implements ILongNameableEntity, ILongNameableDto {
 
 
 
-
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "user_id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "group_id",
-                    referencedColumnName = "group_id"
-            )
-    )
-    @OneToMany
-    private Set<PreservationGroup> preservationGroups;
-
-
-    public Set<PreservationGroup> getPreservationGroups() {
-        return preservationGroups;
+    public Set<UserPreservationGroup> getUserPreservationGroups() {
+        return userPreservationGroups;
     }
 
-    public void setPreservationGroups(Set<PreservationGroup> preservationGroups) {
-        this.preservationGroups = preservationGroups;
-    }
-    public PreservationGroup addPreservationGroup(PreservationGroup preservationGroup){
-        preservationGroups.add(preservationGroup);
-        return  preservationGroup;
-    }
-    public void removePreservationGroup(PreservationGroup preservationGroup){
-        preservationGroups.remove(preservationGroup);
+    public void setUserPreservationGroups(Set<UserPreservationGroup> userPreservationGroups) {
+        this.userPreservationGroups = userPreservationGroups;
     }
 
-
+    public UserPreservationGroup addUserPreservationGroup(UserPreservationGroup userPreservationGroup){
+        this.userPreservationGroups.add(userPreservationGroup);
+        return userPreservationGroup;
+    }
+    public void removeUserPreservationGroup(UserPreservationGroup userPreservationGroup){
+        this.userPreservationGroups.remove(userPreservationGroup);
+    }
 
     @Override
     public void setId(Long id) { this.id = id; }

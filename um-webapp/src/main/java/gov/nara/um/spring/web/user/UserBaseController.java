@@ -11,6 +11,7 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermission;
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.persistence.model.user.UserBusinessUnit;
+import gov.nara.um.persistence.model.user.UserPreservationGroup;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,8 +48,9 @@ public class UserBaseController extends AbstractLongIdController<User> {
             UserBusinessUnit userBusinessUnit = iteruserBU.next();
             userDTO.addBusinssUnitDTO(buildBusinessUnitDTO(userBusinessUnit.getBusinessUnitID()));
         }
-        for(Iterator<PreservationGroup> iterPG = user.getPreservationGroups().iterator(); iterPG.hasNext();) {
-            userDTO.addPreservationGroupDTO(buildPreservationGroupDTO(iterPG.next()));
+        for(Iterator<UserPreservationGroup> iterUPG = user.getUserPreservationGroups().iterator(); iterUPG.hasNext();) {
+            UserPreservationGroup userPreservationGroup = iterUPG.next();
+            userDTO.addPreservationGroupDTO(buildPreservationGroupDTO(userPreservationGroup.getGroupID()));
         }
         return userDTO;
     }

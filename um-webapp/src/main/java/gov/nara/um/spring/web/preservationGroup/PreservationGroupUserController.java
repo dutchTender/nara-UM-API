@@ -5,6 +5,7 @@ import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.user.User;
+import gov.nara.um.persistence.model.user.UserPreservationGroup;
 import gov.nara.um.service.preservationGroup.IPreservationGroupService;
 import gov.nara.um.spring.web.user.UserBaseController;
 import gov.nara.um.util.UmMappings;
@@ -102,9 +103,13 @@ public class PreservationGroupUserController extends UserBaseController {
         if(preservationGroup != null) {
             for (Iterator<User> iterUser = userList.iterator(); iterUser.hasNext(); ) {
                 User user = iterUser.next();
-                if(user.getPreservationGroups().contains(preservationGroup)) {
-                    returnList.add(buildUserDTO(user));
+                for (Iterator<UserPreservationGroup> iterUPG = user.getUserPreservationGroups().iterator(); iterUPG.hasNext(); ) {
+                    UserPreservationGroup userPreservationGroup = iterUPG.next();
+                    if(userPreservationGroup.getGroupID().getId() == preservationGroup.getId()) {
+                        returnList.add(buildUserDTO(user));
+                    }
                 }
+
             }
         }
         else {
