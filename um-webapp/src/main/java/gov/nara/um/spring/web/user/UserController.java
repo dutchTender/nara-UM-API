@@ -184,7 +184,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
         createInternal(newUser);
 
         // create roles
-        List<RoleDTO> rolesList = resource.getUse_roles();
+        List<RoleDTO> rolesList = resource.getUser_roles();
         // process user's business units and preservation groups
         List<BusinessUnitDTO> BUList = resource.getBusiness_units();
         List<PreservationGroupDTO> PGList = resource.getPreservation_groups();
@@ -266,7 +266,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
 
         List<BusinessUnitDTO> prefListBUDTO = resource.getBusiness_units();
         List <PreservationGroupDTO> prefListPGDTO = resource.getPreservation_groups();
-        List<RoleDTO> rolesList = resource.getUse_roles();
+        List<RoleDTO> rolesList = resource.getUser_roles();
 
         if(rolesList.size() > 0){
             currentUser.getUserRoles().clear();
@@ -305,8 +305,6 @@ public class UserController extends UserBaseController implements ILongIdSorting
             currentUser.getUserBusinessUnits().clear();
 
         }
-
-
         if(prefListPGDTO.size() > 0) { // input preferences is not null
 
             currentUser.getUserPreservationGroups().clear();

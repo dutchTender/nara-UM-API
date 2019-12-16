@@ -26,9 +26,9 @@ public class UserDTO {
         preservation_groups.add(preservationGroupDTO);
     }
 
-    private List<RoleDTO> use_roles = new ArrayList<>();
+    private List<RoleDTO> user_roles = new ArrayList<>();
     public void addRoleDTO(RoleDTO roleDTO){
-        use_roles.add(roleDTO);
+        user_roles.add(roleDTO);
     }
 
     public Long getUser_id() {
@@ -71,11 +71,11 @@ public class UserDTO {
         this.preservation_groups = preservation_groups;
     }
 
-    public List<RoleDTO> getUse_roles() {
-        return use_roles;
+    public List<RoleDTO> getUser_roles() {
+        return user_roles;
     }
 
-    public void setUse_roles(List<RoleDTO> use_roles) {
-        this.use_roles = use_roles;
+    public void setUser_roles(List<RoleDTO> user_roles) {
+        this.user_roles = user_roles;
     }
 }
