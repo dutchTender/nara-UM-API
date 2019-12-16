@@ -1,6 +1,5 @@
 package gov.nara.um.spring.web.user;
 
-import gov.nara.common.persistence.service.ILongRawService;
 import gov.nara.common.web.controller.AbstractLongIdController;
 import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupPermissionDTO;
@@ -12,6 +11,8 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermissi
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.persistence.model.user.UserBusinessUnit;
 import gov.nara.um.persistence.model.user.UserPreservationGroup;
+import gov.nara.um.service.bussinessunits.IBusinessUnitService;
+import gov.nara.um.service.preservationGroup.IPreservationGroupService;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,21 +24,32 @@ public class UserBaseController extends AbstractLongIdController<User> {
     @Autowired
     private IUserService userService;
 
-
-
-
     @Override
-    protected ILongRawService<User> getService() {
+    protected IUserService getService() {
         return userService;
     }
 
+    @Autowired
+    private IBusinessUnitService businessUnitService;
 
+    @Autowired
+    private IPreservationGroupService preservationGroupService;
 
-    public IUserService getUserService() {
-        return userService;
+    public IBusinessUnitService getBusinessUnitService() {
+        return businessUnitService;
     }
 
+    public void setBusinessUnitService(IBusinessUnitService businessUnitService) {
+        this.businessUnitService = businessUnitService;
+    }
 
+    public IPreservationGroupService getPreservationGroupService() {
+        return preservationGroupService;
+    }
+
+    public void setPreservationGroupService(IPreservationGroupService preservationGroupService) {
+        this.preservationGroupService = preservationGroupService;
+    }
 
     public UserDTO buildUserDTO(User user){
         UserDTO userDTO = new UserDTO();

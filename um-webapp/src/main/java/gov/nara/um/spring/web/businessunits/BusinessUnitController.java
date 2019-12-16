@@ -158,9 +158,6 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody final BusinessUnitDTO resource) {
@@ -210,12 +207,12 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("id") final Integer id, @RequestBody final BusinessUnitDTO resource) {
 
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         // validate DTO
         // we need to do some manual checks here
         // name has to be there
         // name has to be unique
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // verify that the name field is unique
         // verify that they new name does not clash with existing business unit names
@@ -237,13 +234,15 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdap_name());
 
+
+
         List<BusinessUnitConfigPreferenceDTO> prefListDTO = resource.getBusiness_unit_Preferences();
         List<BusinessUnitConfigurationPreference> preferencesList = businessUnit.getBusinessUnitConfigurationPreferences();
         if(prefListDTO.size() > 0) { // input preferences is not null
 
                 businessUnit.getBusinessUnitConfigurationPreferences().clear();
                 // existing preferences empty. just need to add new preferences
-                // create busienss preference and add it to business unit
+                // create business preference and add it to business unit
                 getService().update(businessUnit);
                 for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCPDTO = prefListDTO.listIterator(); iterBUCPDTO.hasNext();){
                     BusinessUnitConfigPreferenceDTO businessUnitConfigPreferenceDTO = iterBUCPDTO.next();

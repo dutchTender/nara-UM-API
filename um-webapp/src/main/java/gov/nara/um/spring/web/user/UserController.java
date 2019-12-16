@@ -2,14 +2,25 @@ package gov.nara.um.spring.web.user;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ILongIdSortingController;
+import gov.nara.common.web.exception.MyBadRequestException;
+import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitConfigPreferenceDTO;
+import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
+import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
 import gov.nara.um.persistence.dto.user.UserDTO;
+import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
+import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.user.User;
+import gov.nara.um.persistence.model.user.UserBusinessUnit;
+import gov.nara.um.persistence.model.user.UserPreservationGroup;
 import gov.nara.um.util.UmMappings;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -137,6 +148,182 @@ public class UserController extends UserBaseController implements ILongIdSorting
             throw new MyResourceNotFoundException("User Id is not valid. resource is not found.");
         }
         return  buildUserDTO(currentUser);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // create - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
+    public void create(@RequestBody final UserDTO resource) {
+
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+
+        // verify that they new name does not clash with existing business unit names
+        User uniqueUser = getService().findByName(resource.getUser_name());
+        if(uniqueUser != null){
+            throw new MyConflictException("there is already a User with that business name. Data integrity exception.");
+        }
+
+        // assumes DTO is valid
+        // build User unit object
+        User newUser = new User();
+        newUser.setName(resource.getUser_name());
+        newUser.setUser_type(resource.getUser_type());
+        createInternal(newUser);
+
+
+        // process user's business units and preservation groups
+        List<BusinessUnitDTO> BUList = resource.getBusiness_units();
+        List<PreservationGroupDTO> PGList = resource.getPreservation_groups();
+        User currentUser = getService().findByName(resource.getUser_name()); // this should
+        if(BUList.size() > 0){ // we may force this size to be 1
+            for(Iterator<BusinessUnitDTO> iterBU = BUList.listIterator(); iterBU.hasNext();){
+                UserBusinessUnit userBusinessUnit = new UserBusinessUnit();
+                userBusinessUnit.setUserID(currentUser);
+                BusinessUnit businessUnit = getBusinessUnitService().findByName(iterBU.next().getBusiness_unit_name());
+                if(businessUnit == null){
+                    throw new MyBadRequestException("business unit for user is not valid. user association is not created.");
+                }
+                userBusinessUnit.setBusinessUnitID(businessUnit);
+                currentUser.addUserBusinessUnit(userBusinessUnit);
+            }
+        }
+
+        if(PGList.size() > 0){ // we may force this size to be 1
+            for(Iterator<PreservationGroupDTO> iterPG = PGList.listIterator(); iterPG.hasNext();){
+                UserPreservationGroup userPreservationGroup = new UserPreservationGroup();
+                userPreservationGroup.setUserID(currentUser);
+                PreservationGroup preservationGroup = getPreservationGroupService().findByName(iterPG.next().getGroup_name());
+                if(preservationGroup == null){
+                    throw new MyBadRequestException("preservation group for user is not valid. user association is not created.");
+                }
+                userPreservationGroup.setGroupID(preservationGroup);
+                currentUser.addUserPreservationGroup(userPreservationGroup);
+            }
+        }
+
+        getService().update(currentUser);
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // update - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable("id") final Long id, @RequestBody final UserDTO resource) {
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // validate DTO
+        // we need to do some manual checks here
+        // name has to be there
+        // name has to be unique
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // verify that the name field is unique
+        // verify that they new name does not clash with existing business unit names
+        User uniqueUser = getService().findByName(resource.getUser_name());
+        if(uniqueUser.getId() != id){
+            throw new MyConflictException("there is already a User with that name. Data integrity exception.");
+        }
+
+
+        User currentUser = getService().findOne(id);
+        if(currentUser == null){
+            throw new MyBadRequestException("user id variable is not valid. Bad Request exception.");
+        }
+
+
+        // assumes DTO is valid when execution reaches here
+        // build business unit object
+        currentUser.setName(resource.getUser_name());
+        currentUser.setUser_type(resource.getUser_type());
+
+
+
+        List<BusinessUnitDTO> prefListBUDTO = resource.getBusiness_units();
+        List <PreservationGroupDTO> prefListPGDTO = resource.getPreservation_groups();
+
+        if(prefListBUDTO.size() > 0) { // input preferences is not null
+
+            currentUser.getUserBusinessUnits().clear();
+            // existing preferences empty. just need to add new preferences
+            // create business preference and add it to business unit
+            getService().update(currentUser);
+            for(Iterator<BusinessUnitDTO> iterBU = prefListBUDTO.listIterator(); iterBU.hasNext();){
+                UserBusinessUnit userBusinessUnit = new UserBusinessUnit();
+                userBusinessUnit.setUserID(currentUser);
+                BusinessUnit businessUnit = getBusinessUnitService().findByName(iterBU.next().getBusiness_unit_name());
+                if(businessUnit == null){
+                    throw new MyBadRequestException("business unit for user is not valid. user association is not created.");
+                }
+                userBusinessUnit.setBusinessUnitID(businessUnit);
+                currentUser.addUserBusinessUnit(userBusinessUnit);
+            }
+
+            getService().update(currentUser);
+
+        }
+        else {
+            // resource business unit lists is empty
+            currentUser.getUserBusinessUnits().clear();
+            getService().update(currentUser);
+        }
+
+
+        if(prefListPGDTO.size() > 0) { // input preferences is not null
+
+            currentUser.getUserPreservationGroups().clear();
+            // existing preferences empty. just need to add new preferences
+            // create business preference and add it to business unit
+            getService().update(currentUser);
+            for(Iterator<PreservationGroupDTO> iterPG = prefListPGDTO.listIterator(); iterPG.hasNext();){
+                UserPreservationGroup userPreservationGroup = new UserPreservationGroup();
+                userPreservationGroup.setUserID(currentUser);
+                PreservationGroup preservationGroup = getPreservationGroupService().findByName(iterPG.next().getGroup_name());
+                if(preservationGroup == null){
+                    throw new MyBadRequestException("preservation group for user is not valid. user association is not created.");
+                }
+                userPreservationGroup.setGroupID(preservationGroup);
+                currentUser.addUserPreservationGroup(userPreservationGroup);
+            }
+
+            getService().update(currentUser);
+
+        }
+        else {
+            // resource business unit lists is empty
+            currentUser.getUserPreservationGroups().clear();
+            getService().update(currentUser);
+        }
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Delete - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") final Long id) {
+        deleteByIdInternal(id);
     }
 
 }
