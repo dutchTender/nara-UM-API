@@ -2,14 +2,12 @@ package gov.nara.um.spring.web.user;
 
 import gov.nara.common.util.QueryConstants;
 import gov.nara.common.web.controller.ILongIdSortingController;
+import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.util.UmMappings;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -121,4 +119,24 @@ public class UserController extends UserBaseController implements ILongIdSorting
         return returnList;
 
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // API
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // find - one
+    // Unit testing  : NA
+    // Integration testing : NA
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public UserDTO findOne(@PathVariable("id") final Long id) {
+
+        User currentUser = findOneInternal(id);
+        if(currentUser == null){
+            throw new MyResourceNotFoundException("User Id is not valid. resource is not found.");
+        }
+        return  buildUserDTO(currentUser);
+    }
+
 }

@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@JsonPropertyOrder({ "business_unit_id", "name", "org_code", "ldapName", "business_unit_Preferences" })
+@JsonPropertyOrder({ "business_unit_id", "business_unit_name", "org_code", "ldapName", "business_unit_Preferences" })
 public class BusinessUnitDTO {
 
 
 
     private Integer business_unit_id;
 
-    private String name;
+    private String business_unit_name;
 
     private String org_code;
 
@@ -29,12 +29,12 @@ public class BusinessUnitDTO {
         this.business_unit_id = business_unit_id;
     }
 
-    public String getName() {
-        return name;
+    public String getBusiness_unit_name() {
+        return business_unit_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setBusiness_unit_name(String business_unit_name) {
+        this.business_unit_name = business_unit_name;
     }
 
     public String getOrg_code() {

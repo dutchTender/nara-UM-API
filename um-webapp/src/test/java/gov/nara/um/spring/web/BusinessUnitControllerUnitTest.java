@@ -77,7 +77,7 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_AddOne_201_status_OK() throws Exception {
 
         BusinessUnitDTO test_unit = new BusinessUnitDTO();
-        test_unit.setName("apex");
+        test_unit.setBusiness_unit_name("apex");
         test_unit.setLdap_name("grant thornton");
         test_unit.setOrg_code("NARA a2");
 
@@ -100,7 +100,7 @@ public class BusinessUnitControllerUnitTest {
     public final void check_Business_unit_controller_updateOne_201_status_OK() throws Exception {
 
         BusinessUnitDTO test_unit = new BusinessUnitDTO();
-        test_unit.setName("apex");
+        test_unit.setBusiness_unit_name("apex");
         test_unit.setLdap_name("grant thornton");
         test_unit.setOrg_code("NARA a2");
 

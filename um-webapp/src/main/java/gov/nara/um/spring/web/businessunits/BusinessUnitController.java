@@ -25,10 +25,6 @@ import java.util.List;
 @RequestMapping(value = UmMappings.BUSINESSUNITS)
 public class BusinessUnitController extends BusinessUnitBaseController implements ISortingController<BusinessUnit> {
 
-
-
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // API
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +171,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         // name has to be unique
 
         // verify that they new name does not clash with existing business unit names
-        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
+        BusinessUnit uniqueUnit = getService().findByName(resource.getBusiness_unit_name());
         if(uniqueUnit != null){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
@@ -183,7 +179,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         // assumes DTO is valid
         // build business unit object
         BusinessUnit businessUnit = new BusinessUnit();
-        businessUnit.setName(resource.getName());
+        businessUnit.setName(resource.getBusiness_unit_name());
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdap_name());
         createInternal(businessUnit);
@@ -193,7 +189,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         List<BusinessUnitConfigPreferenceDTO> prefList = resource.getBusiness_unit_Preferences();
 
         if(prefList.size() > 0){ // we may force this size to be 1
-            BusinessUnit currentBU = getService().findByName(resource.getName()); // this should
+            BusinessUnit currentBU = getService().findByName(resource.getBusiness_unit_name()); // this should
             for(Iterator<BusinessUnitConfigPreferenceDTO> iterBUCP = prefList.listIterator(); iterBUCP.hasNext();){
                 BusinessUnitConfigurationPreference businessUnitConfigurationPreference = buildBusinessUnitConfigurationPreference(businessUnit, iterBUCP.next());
                 currentBU.addBusinessUnitConfigurationPreference(businessUnitConfigurationPreference);
@@ -223,7 +219,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
 
         // verify that the name field is unique
         // verify that they new name does not clash with existing business unit names
-        BusinessUnit uniqueUnit = getService().findByName(resource.getName());
+        BusinessUnit uniqueUnit = getService().findByName(resource.getBusiness_unit_name());
         if(uniqueUnit.getId() != id){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
@@ -237,7 +233,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
 
         // assumes DTO is valid when execution reaches here
         // build business unit object
-        businessUnit.setName(resource.getName());
+        businessUnit.setName(resource.getBusiness_unit_name());
         businessUnit.setOrg_code(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdap_name());
 

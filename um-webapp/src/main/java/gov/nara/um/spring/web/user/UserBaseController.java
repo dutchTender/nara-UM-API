@@ -42,7 +42,7 @@ public class UserBaseController extends AbstractLongIdController<User> {
     public UserDTO buildUserDTO(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setUser_id(user.getId());
-        userDTO.setName(user.getName());
+        userDTO.setUser_name(user.getName());
         userDTO.setUser_type(user.getUser_type());
         for(Iterator<UserBusinessUnit> iteruserBU = user.getUserBusinessUnits().iterator(); iteruserBU.hasNext();) {
             UserBusinessUnit userBusinessUnit = iteruserBU.next();
@@ -58,7 +58,7 @@ public class UserBaseController extends AbstractLongIdController<User> {
     public BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
         BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
         businessUnitDTO.setBusiness_unit_id(currentBU.getId());
-        businessUnitDTO.setName(currentBU.getName());
+        businessUnitDTO.setBusiness_unit_name(currentBU.getName());
         businessUnitDTO.setOrg_code(currentBU.getOrg_code());
         businessUnitDTO.setLdap_name(currentBU.getLdapName());
 
