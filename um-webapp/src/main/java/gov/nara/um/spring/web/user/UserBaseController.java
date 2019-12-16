@@ -83,6 +83,14 @@ public class UserBaseController extends AbstractLongIdController<User> {
            roleDTO.setRole_name(userRole.getRoleID().getName());
            return  roleDTO;
     }
+    public UserRole buildUserRole(User user, RoleDTO roleDTO){
+        UserRole userRole = new UserRole();
+        userRole.setRoleID(getRoleService().findOne(roleDTO.getRole_id()));
+        userRole.setUserID(user);
+        return userRole;
+    }
+
+
 
     public BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
         BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();

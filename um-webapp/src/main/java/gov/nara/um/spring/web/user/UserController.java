@@ -8,12 +8,14 @@ import gov.nara.common.web.exception.MyResourceNotFoundException;
 import gov.nara.um.persistence.dto.businessunits.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
+import gov.nara.um.persistence.dto.role.RoleDTO;
 import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.persistence.model.user.UserBusinessUnit;
 import gov.nara.um.persistence.model.user.UserPreservationGroup;
+import gov.nara.um.persistence.model.user.UserRole;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -181,11 +183,18 @@ public class UserController extends UserBaseController implements ILongIdSorting
         newUser.setUser_type(resource.getUser_type());
         createInternal(newUser);
 
-
+        // create roles
+        List<RoleDTO> rolesList = resource.getUse_roles();
         // process user's business units and preservation groups
         List<BusinessUnitDTO> BUList = resource.getBusiness_units();
         List<PreservationGroupDTO> PGList = resource.getPreservation_groups();
         User currentUser = getService().findByName(resource.getUser_name()); // this should
+
+        if(rolesList.size() > 0){
+            for(Iterator<RoleDTO> iterRole = rolesList.listIterator(); iterRole.hasNext();){
+                currentUser.addUserRole(buildUserRole(currentUser, iterRole.next()));
+            }
+        }
         if(BUList.size() > 0){ // we may force this size to be 1
             for(Iterator<BusinessUnitDTO> iterBU = BUList.listIterator(); iterBU.hasNext();){
                 UserBusinessUnit userBusinessUnit = new UserBusinessUnit();
@@ -257,7 +266,20 @@ public class UserController extends UserBaseController implements ILongIdSorting
 
         List<BusinessUnitDTO> prefListBUDTO = resource.getBusiness_units();
         List <PreservationGroupDTO> prefListPGDTO = resource.getPreservation_groups();
+        List<RoleDTO> rolesList = resource.getUse_roles();
 
+        if(rolesList.size() > 0){
+            currentUser.getUserRoles().clear();
+            // existing preferences empty. just need to add new preferences
+            // create business preference and add it to business unit
+            getService().update(currentUser);
+            for(Iterator<RoleDTO> iterRole = rolesList.listIterator(); iterRole.hasNext();){
+                currentUser.addUserRole(buildUserRole(currentUser, iterRole.next()));
+            }
+        }
+        else {
+            currentUser.getUserBusinessUnits().clear();
+        }
         if(prefListBUDTO.size() > 0) { // input preferences is not null
 
             currentUser.getUserBusinessUnits().clear();
@@ -275,13 +297,13 @@ public class UserController extends UserBaseController implements ILongIdSorting
                 currentUser.addUserBusinessUnit(userBusinessUnit);
             }
 
-            getService().update(currentUser);
+            //getService().update(currentUser);
 
         }
         else {
             // resource business unit lists is empty
             currentUser.getUserBusinessUnits().clear();
-            getService().update(currentUser);
+
         }
 
 
@@ -302,15 +324,15 @@ public class UserController extends UserBaseController implements ILongIdSorting
                 currentUser.addUserPreservationGroup(userPreservationGroup);
             }
 
-            getService().update(currentUser);
+            //getService().update(currentUser);
 
         }
         else {
             // resource business unit lists is empty
             currentUser.getUserPreservationGroups().clear();
-            getService().update(currentUser);
-        }
 
+        }
+        getService().update(currentUser);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
