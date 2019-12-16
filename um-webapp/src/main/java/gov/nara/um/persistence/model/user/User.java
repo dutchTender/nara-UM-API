@@ -58,6 +58,15 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     private Set<UserPreservationGroup> userPreservationGroups;
 
 
+    @OneToMany(
+            mappedBy = "userID",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<UserRole> userRoles;
+
+
+
     public Set<UserBusinessUnit> getUserBusinessUnits() {
         return userBusinessUnits;
     }
@@ -90,6 +99,24 @@ public class User implements ILongNameableEntity, ILongNameableDto {
     public void removeUserPreservationGroup(UserPreservationGroup userPreservationGroup){
         this.userPreservationGroups.remove(userPreservationGroup);
     }
+
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public UserRole addUserRole(UserRole userRole){
+        this.userRoles.add(userRole);
+        return userRole;
+    }
+    public void removeUserRole(UserRole userRole){
+        this.userRoles.remove(userRole);
+    }
+
 
     @Override
     public void setId(Long id) { this.id = id; }

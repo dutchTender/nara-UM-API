@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@JsonPropertyOrder({ "group_id", "group_name", "group_description", "groupPermissions" })
+@JsonPropertyOrder({ "group_id", "group_name", "group_description", "group_permissions" })
 public class PreservationGroupDTO {
 
     private Long group_id;

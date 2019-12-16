@@ -4,6 +4,7 @@ import gov.nara.common.web.controller.AbstractLongIdController;
 import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupPermissionDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
+import gov.nara.um.persistence.dto.role.RoleDTO;
 import gov.nara.um.persistence.dto.user.UserDTO;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnit;
 import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
@@ -11,8 +12,10 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroupPermissi
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.persistence.model.user.UserBusinessUnit;
 import gov.nara.um.persistence.model.user.UserPreservationGroup;
+import gov.nara.um.persistence.model.user.UserRole;
 import gov.nara.um.service.bussinessunits.IBusinessUnitService;
 import gov.nara.um.service.preservationGroup.IPreservationGroupService;
+import gov.nara.um.service.role.IRoleService;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,20 +38,20 @@ public class UserBaseController extends AbstractLongIdController<User> {
     @Autowired
     private IPreservationGroupService preservationGroupService;
 
+    @Autowired
+    private IRoleService roleService;
+
     public IBusinessUnitService getBusinessUnitService() {
         return businessUnitService;
     }
 
-    public void setBusinessUnitService(IBusinessUnitService businessUnitService) {
-        this.businessUnitService = businessUnitService;
-    }
 
     public IPreservationGroupService getPreservationGroupService() {
         return preservationGroupService;
     }
 
-    public void setPreservationGroupService(IPreservationGroupService preservationGroupService) {
-        this.preservationGroupService = preservationGroupService;
+    public IRoleService getRoleService() {
+        return roleService;
     }
 
     public UserDTO buildUserDTO(User user){
@@ -56,6 +59,11 @@ public class UserBaseController extends AbstractLongIdController<User> {
         userDTO.setUser_id(user.getId());
         userDTO.setUser_name(user.getName());
         userDTO.setUser_type(user.getUser_type());
+
+        for(Iterator<UserRole> iterRole = user.getUserRoles().iterator(); iterRole.hasNext();) {
+            userDTO.addRoleDTO(buildRoleDTO(iterRole.next()));
+        }
+
         for(Iterator<UserBusinessUnit> iteruserBU = user.getUserBusinessUnits().iterator(); iteruserBU.hasNext();) {
             UserBusinessUnit userBusinessUnit = iteruserBU.next();
             userDTO.addBusinssUnitDTO(buildBusinessUnitDTO(userBusinessUnit.getBusinessUnitID()));
@@ -65,6 +73,15 @@ public class UserBaseController extends AbstractLongIdController<User> {
             userDTO.addPreservationGroupDTO(buildPreservationGroupDTO(userPreservationGroup.getGroupID()));
         }
         return userDTO;
+    }
+
+    public RoleDTO buildRoleDTO(UserRole userRole){
+
+           RoleDTO roleDTO = new RoleDTO();
+           roleDTO.setRole_id(userRole.getRoleID().getId());
+           roleDTO.setRole_description(userRole.getRoleID().getRole_description());
+           roleDTO.setRole_name(userRole.getRoleID().getName());
+           return  roleDTO;
     }
 
     public BusinessUnitDTO buildBusinessUnitDTO(BusinessUnit currentBU){
