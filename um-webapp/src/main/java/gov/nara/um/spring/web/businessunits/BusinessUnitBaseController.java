@@ -25,7 +25,7 @@ abstract class BusinessUnitBaseController  extends AbstractController<BusinessUn
         BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
         businessUnitDTO.setBusiness_unit_id(currentBU.getId());
         businessUnitDTO.setBusiness_unit_name(currentBU.getName());
-        businessUnitDTO.setOrg_code(currentBU.getOrg_code());
+        businessUnitDTO.setOrg_code(currentBU.getCode());
         businessUnitDTO.setLdap_name(currentBU.getLdapName());
 
         for(Iterator<BusinessUnitConfigurationPreference> iterBUCP = currentBU.getBusinessUnitConfigurationPreferences().listIterator(); iterBUCP.hasNext();){

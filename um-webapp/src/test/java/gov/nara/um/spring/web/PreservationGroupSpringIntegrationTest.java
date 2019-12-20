@@ -36,7 +36,7 @@ public class PreservationGroupSpringIntegrationTest {
         BusinessUnit businessUnit = new BusinessUnit();
         businessUnit.setName("xxxx");
         businessUnit.setLdapName("xxxxxxxxx");
-        businessUnit.setOrg_code("apex");
+        businessUnit.setCode("apex");
         entityManager.persist(businessUnit);
         entityManager.flush();
 
@@ -57,7 +57,7 @@ public class PreservationGroupSpringIntegrationTest {
         BusinessUnit businessUnit = new BusinessUnit();
         businessUnit.setName("xxxx");
         businessUnit.setLdapName("xxxxxxxxx");
-        businessUnit.setOrg_code("apex");
+        businessUnit.setCode("apex");
         entityManager.persist(businessUnit);
         entityManager.flush();
 

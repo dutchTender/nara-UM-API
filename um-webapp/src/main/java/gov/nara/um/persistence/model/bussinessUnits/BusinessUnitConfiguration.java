@@ -14,12 +14,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
-@Data
-@Getter
-@Setter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "business_unit_configuration", schema = "oif_ods")
 //@Table(name = "business_unit_configuration")
@@ -31,17 +29,10 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bu_conf_seq_gen")
     @SequenceGenerator(name = "bu_conf_seq_gen", sequenceName = "oif_ods.business_unit_configuration_configuration_id_seq", allocationSize=1)
     //@GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty(hidden = true)
     private Long id;
 
     @Column(name = "configuration_name", unique = true, nullable = false)
     private String name;
-
-
-
-
-
-
 
     @Override
     public String getName() {
@@ -62,5 +53,17 @@ public class BusinessUnitConfiguration implements ILongNameableEntity, ILongName
         this.id = id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BusinessUnitConfiguration)) return false;
+        BusinessUnitConfiguration that = (BusinessUnitConfiguration) o;
+        return getId().equals(that.getId()) &&
+                getName().equals(that.getName());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName());
+    }
 }

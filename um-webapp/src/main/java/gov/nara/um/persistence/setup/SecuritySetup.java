@@ -71,7 +71,7 @@ public class SecuritySetup implements ApplicationListener<ContextRefreshedEvent>
 
         BusinessUnit businessUnit = new BusinessUnit();
         businessUnit.setName("ADIS");
-        businessUnit.setOrg_code("NARA");
+        businessUnit.setCode("NARA");
         businessUnit.setLdapName("ADIS");
         iBusinessUnitService.create(businessUnit);
 

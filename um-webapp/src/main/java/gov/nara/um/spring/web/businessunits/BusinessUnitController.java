@@ -177,7 +177,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         // build business unit object
         BusinessUnit businessUnit = new BusinessUnit();
         businessUnit.setName(resource.getBusiness_unit_name());
-        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setCode(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdap_name());
         createInternal(businessUnit);
 
@@ -231,7 +231,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         // assumes DTO is valid when execution reaches here
         // build business unit object
         businessUnit.setName(resource.getBusiness_unit_name());
-        businessUnit.setOrg_code(resource.getOrg_code());
+        businessUnit.setCode(resource.getOrg_code());
         businessUnit.setLdapName(resource.getLdap_name());
 
 
