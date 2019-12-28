@@ -35,6 +35,12 @@ public class BusinessUnitServiceImpl extends AbstractService<BusinessUnit> imple
 
     // other
 
+    @Override
+    @Transactional(readOnly = true)
+    public BusinessUnit findByCode(String code) {
+        return dao.findByCode(code);
+    }
+
 
     // remove user
 

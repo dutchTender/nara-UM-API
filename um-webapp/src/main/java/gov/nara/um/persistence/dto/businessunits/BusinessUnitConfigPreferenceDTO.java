@@ -4,7 +4,7 @@ public class BusinessUnitConfigPreferenceDTO {
 
 
 
-    private Long business_unit_config_id;
+    private Integer business_unit_config_id;
 
 
     private String configuration_value;
@@ -14,11 +14,11 @@ public class BusinessUnitConfigPreferenceDTO {
     }
 
 
-    public Long getBusiness_unit_config_id() {
+    public Integer getBusiness_unit_config_id() {
         return business_unit_config_id;
     }
 
-    public void setBusiness_unit_config_id(Long business_unit_config_id) {
+    public void setBusiness_unit_config_id(Integer business_unit_config_id) {
         this.business_unit_config_id = business_unit_config_id;
     }
 

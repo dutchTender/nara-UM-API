@@ -77,6 +77,7 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
     // Unit testing  : NA
     // Integration testing : NA
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<PreservationGroupDTO> findAllPG(HttpServletRequest request) {
@@ -164,7 +165,6 @@ public class PreservationGroupController extends  PreservationGroupBaseControlle
 
 
 
-    @Transactional
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable("id") final Long id, @RequestBody final PreservationGroupDTO resource) {

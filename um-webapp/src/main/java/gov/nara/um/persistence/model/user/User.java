@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -42,28 +43,31 @@ public class User implements ILongNameableEntity, ILongNameableDto {
 
 
     @OneToMany(
+            fetch = FetchType.EAGER,
             mappedBy = "userID",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<UserBusinessUnit> userBusinessUnits;
+    private Set<UserBusinessUnit> userBusinessUnits = new HashSet<>();
 
 
 
     @OneToMany(
+           fetch = FetchType.EAGER,
             mappedBy = "userID",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<UserPreservationGroup> userPreservationGroups;
+    private Set<UserPreservationGroup> userPreservationGroups = new HashSet<>();
 
 
     @OneToMany(
+            fetch = FetchType.EAGER,
             mappedBy = "userID",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<UserRole> userRoles;
+    private Set<UserRole> userRoles = new HashSet<>();
 
 
 

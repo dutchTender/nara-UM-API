@@ -124,7 +124,7 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
     }
 
 
-
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<BusinessUnitDTO> findAllBUDTO(final HttpServletRequest request) {
@@ -171,6 +171,12 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         BusinessUnit uniqueUnit = getService().findByName(resource.getBusiness_unit_name());
         if(uniqueUnit != null){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
+        }
+
+        uniqueUnit = getService().findByCode(resource.getOrg_code());
+
+        if (uniqueUnit != null) {
+                throw new MyConflictException("there is already a business unit with that org code. Data integrity exception.");
         }
 
         // assumes DTO is valid
@@ -220,6 +226,15 @@ public class BusinessUnitController extends BusinessUnitBaseController implement
         if(uniqueUnit.getId() != id){
             throw new MyConflictException("there is already a business unit with that business name. Data integrity exception.");
         }
+
+        uniqueUnit = getService().findByCode(resource.getOrg_code());
+
+        if (uniqueUnit != null) {
+           if (uniqueUnit.getId() != id) {
+               throw new MyConflictException("there is already a business unit with that org code. Data integrity exception.");
+           }
+
+       }
 
 
         BusinessUnit businessUnit = getService().findOne(id);

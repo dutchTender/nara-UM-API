@@ -50,6 +50,22 @@ public class PreservationGroupBaseController extends AbstractLongIdController<Pr
             PreservationGroupPermissionDTO preservationGroupPermissionDTO = buildPreservationGroupPermissionDTO( iterPGP.next());
             preservationGroupDTO.addGroupPermission(preservationGroupPermissionDTO);
         }
+        // add default permission to default group
+        if(preservationGroupDTO.getGroup_permissions().size() == 0){
+            PreservationGroupPermissionDTO none  = new PreservationGroupPermissionDTO();
+            none.setPermission_level("None");
+            PreservationGroupPermissionDTO content = new PreservationGroupPermissionDTO();
+            content.setPermission_level("Content");
+            preservationGroupDTO.addGroupPermission(none);
+            preservationGroupDTO.addGroupPermission(content);
+        }
+        if(preservationGroupDTO.getGroup_permissions().size() == 1){
+            PreservationGroupPermissionDTO none  = new PreservationGroupPermissionDTO();
+            none.setPermission_level("None");
+            preservationGroupDTO.addGroupPermission(none);
+
+        }
+
         return preservationGroupDTO;
 
     }

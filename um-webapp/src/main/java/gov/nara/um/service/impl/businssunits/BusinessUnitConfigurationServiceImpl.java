@@ -1,6 +1,7 @@
 package gov.nara.um.service.impl.businssunits;
 
 import gov.nara.common.persistence.service.AbstractLongIdService;
+import gov.nara.common.persistence.service.AbstractService;
 import gov.nara.um.persistence.dao.businessunits.IBusinessUnitConfigurationDao;
 import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfiguration;
 
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class BusinessUnitConfigurationServiceImpl extends AbstractLongIdService<BusinessUnitConfiguration> implements IBusinessUnitConfigurationService {
+public class BusinessUnitConfigurationServiceImpl extends AbstractService<BusinessUnitConfiguration> implements IBusinessUnitConfigurationService {
 
     @Autowired
     private IBusinessUnitConfigurationDao dao;

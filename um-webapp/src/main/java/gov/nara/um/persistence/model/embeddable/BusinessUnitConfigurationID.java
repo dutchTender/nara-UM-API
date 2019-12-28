@@ -10,9 +10,9 @@ public class BusinessUnitConfigurationID implements Serializable {
     @Column( name = "business_unit_id")
     private Integer businessUnitID;
     @Column( name = "business_unit_config_id")
-    private Long businessUnitConfigID;
+    private Integer businessUnitConfigID;
 
-    public BusinessUnitConfigurationID(Integer businessUnitID, Long businessUnitConfigID) {
+    public BusinessUnitConfigurationID(Integer businessUnitID, Integer businessUnitConfigID) {
         this.businessUnitID = businessUnitID;
         this.businessUnitConfigID = businessUnitConfigID;
     }
@@ -29,11 +29,11 @@ public class BusinessUnitConfigurationID implements Serializable {
         this.businessUnitID = businessUnitID;
     }
 
-    public Long getBusinessUnitConfigID() {
+    public Integer getBusinessUnitConfigID() {
         return businessUnitConfigID;
     }
 
-    public void setBusinessUnitConfigID(Long businessUnitConfigID) {
+    public void setBusinessUnitConfigID(Integer businessUnitConfigID) {
         this.businessUnitConfigID = businessUnitConfigID;
     }
 

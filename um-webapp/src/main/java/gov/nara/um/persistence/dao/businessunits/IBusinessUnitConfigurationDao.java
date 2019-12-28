@@ -5,7 +5,7 @@ import gov.nara.um.persistence.model.bussinessUnits.BusinessUnitConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface IBusinessUnitConfigurationDao extends JpaRepository<BusinessUnitConfiguration, Long>, JpaSpecificationExecutor<BusinessUnitConfiguration>, IByNameApi<BusinessUnitConfiguration> {
+public interface IBusinessUnitConfigurationDao extends JpaRepository<BusinessUnitConfiguration, Integer>, JpaSpecificationExecutor<BusinessUnitConfiguration>, IByNameApi<BusinessUnitConfiguration> {
 
 
     public BusinessUnitConfiguration findByName(String name);

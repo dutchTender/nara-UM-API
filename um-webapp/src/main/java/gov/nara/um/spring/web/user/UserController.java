@@ -5,7 +5,6 @@ import gov.nara.common.web.controller.ILongIdSortingController;
 import gov.nara.common.web.exception.MyBadRequestException;
 import gov.nara.common.web.exception.MyConflictException;
 import gov.nara.common.web.exception.MyResourceNotFoundException;
-import gov.nara.um.persistence.dto.businessunits.BusinessUnitConfigPreferenceDTO;
 import gov.nara.um.persistence.dto.businessunits.BusinessUnitDTO;
 import gov.nara.um.persistence.dto.preservationgroups.PreservationGroupDTO;
 import gov.nara.um.persistence.dto.role.RoleDTO;
@@ -15,7 +14,6 @@ import gov.nara.um.persistence.model.preservationGroup.PreservationGroup;
 import gov.nara.um.persistence.model.user.User;
 import gov.nara.um.persistence.model.user.UserBusinessUnit;
 import gov.nara.um.persistence.model.user.UserPreservationGroup;
-import gov.nara.um.persistence.model.user.UserRole;
 import gov.nara.um.util.UmMappings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -26,7 +24,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 
 
 @Controller
@@ -120,6 +117,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
         return null;
     }
 
+    @CrossOrigin(origins = "http://localhost:63342")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<UserDTO> findAllUserDTO(final HttpServletRequest request) {
@@ -162,7 +160,6 @@ public class UserController extends UserBaseController implements ILongIdSorting
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @Transactional
     public void create(@RequestBody final UserDTO resource) {
 
         // validate DTO
@@ -195,6 +192,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
                 currentUser.addUserRole(buildUserRole(currentUser, iterRole.next()));
             }
         }
+
         if(BUList.size() > 0){ // we may force this size to be 1
             for(Iterator<BusinessUnitDTO> iterBU = BUList.listIterator(); iterBU.hasNext();){
                 UserBusinessUnit userBusinessUnit = new UserBusinessUnit();
@@ -222,6 +220,9 @@ public class UserController extends UserBaseController implements ILongIdSorting
         }
 
         getService().update(currentUser);
+
+
+
 
     }
 
@@ -279,6 +280,9 @@ public class UserController extends UserBaseController implements ILongIdSorting
         }
         else {
             currentUser.getUserBusinessUnits().clear();
+            // the reason we are doing remove all here is because child relationships are not exposed
+            // we have no way of removing child relationships ...
+
         }
         if(prefListBUDTO.size() > 0) { // input preferences is not null
 

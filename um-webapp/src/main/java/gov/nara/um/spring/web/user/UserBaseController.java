@@ -19,6 +19,10 @@ import gov.nara.um.service.role.IRoleService;
 import gov.nara.um.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.*;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 public class UserBaseController extends AbstractLongIdController<User> {
@@ -68,10 +72,23 @@ public class UserBaseController extends AbstractLongIdController<User> {
             UserBusinessUnit userBusinessUnit = iteruserBU.next();
             userDTO.addBusinssUnitDTO(buildBusinessUnitDTO(userBusinessUnit.getBusinessUnitID()));
         }
+        if(userDTO.getBusiness_units().size() == 0){
+            // add default Not Available business unit
+            BusinessUnitDTO businessUnitDTO = new BusinessUnitDTO();
+            businessUnitDTO.setBusiness_unit_name("Not Available");
+            userDTO.addBusinssUnitDTO(businessUnitDTO);
+        }
         for(Iterator<UserPreservationGroup> iterUPG = user.getUserPreservationGroups().iterator(); iterUPG.hasNext();) {
             UserPreservationGroup userPreservationGroup = iterUPG.next();
             userDTO.addPreservationGroupDTO(buildPreservationGroupDTO(userPreservationGroup.getGroupID()));
         }
+        if(userDTO.getPreservation_groups().size() == 0){
+            // add default Not Available preservation group
+            PreservationGroupDTO preservationGroupDTO = new PreservationGroupDTO();
+            preservationGroupDTO.setGroup_name("Not Available");
+            userDTO.addPreservationGroupDTO(preservationGroupDTO);
+        }
+
         return userDTO;
     }
 
@@ -119,5 +136,59 @@ public class UserBaseController extends AbstractLongIdController<User> {
         }
 
         return preservationGroupDTO;
+    }
+
+
+    public void createLDAPEntry(User user){
+        Hashtable env = new Hashtable();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldaps://vpnsrv01.oifd.archives.gov:10636");
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_PRINCIPAL,"uid=admin,ou=system"); // specify the username
+        env.put(Context.SECURITY_CREDENTIALS,"naraoif1234!");// specify the password
+        // TODO code application logic here
+
+        // entry's DN
+        String entryDN = "uid=user1,ou=system";
+
+        // entry's attributes
+        // The new external user must be created in the ERA 2.0 Apache Directory by using ApacheDS studio.
+        // The required attributes are email address, uid, sn, and password.
+
+
+        Attribute cn = new BasicAttribute("cn", "li zhang");
+        Attribute sn = new BasicAttribute("sn", "zhang");
+        Attribute mail = new BasicAttribute("mail", "li.zhang@nara.gov");
+        //Attribute phone = new BasicAttribute("telephoneNumber", "+1 222 3334444");
+        Attribute oc = new BasicAttribute("objectClass");
+        oc.add("Dev/Test");
+        oc.add("oifd");
+        oc.add("archives");
+        oc.add("gov");
+
+        DirContext ctx = null;
+
+        try {
+            // get a handle to an Initial DirContext
+            ctx = new InitialDirContext(env);
+
+            // build the entry
+            BasicAttributes entry = new BasicAttributes();
+            entry.put(cn);
+            entry.put(sn);
+            entry.put(mail);
+            //entry.put(phone);
+
+            entry.put(oc);
+
+            // Add the entry
+
+            ctx.createSubcontext(entryDN, entry);
+            //System.out.println( "AddUser: added entry " + entryDN + ".");
+
+        } catch (NamingException e) {
+            System.err.println("AddUser: error adding entry." + e);
+        }
+
     }
 }
