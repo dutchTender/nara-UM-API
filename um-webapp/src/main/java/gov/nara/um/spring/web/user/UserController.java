@@ -248,7 +248,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
         // verify that they new name does not clash with existing business unit names
         User uniqueUser = getService().findByName(resource.getUser_name());
         if(uniqueUser.getId() != id){
-            throw new MyConflictException("there is already a User with that name. Data integrity exception.");
+            throw new MyConflictException("there is already a User with that name. Data integrity exception. ");
         }
 
 
@@ -274,9 +274,11 @@ public class UserController extends UserBaseController implements ILongIdSorting
             // existing preferences empty. just need to add new preferences
             // create business preference and add it to business unit
             getService().update(currentUser);
+            /*
             for(Iterator<RoleDTO> iterRole = rolesList.listIterator(); iterRole.hasNext();){
                 currentUser.addUserRole(buildUserRole(currentUser, iterRole.next()));
-            }
+            }*/
+
         }
         else {
             currentUser.getUserBusinessUnits().clear();
@@ -293,7 +295,7 @@ public class UserController extends UserBaseController implements ILongIdSorting
             for(Iterator<BusinessUnitDTO> iterBU = prefListBUDTO.listIterator(); iterBU.hasNext();){
                 UserBusinessUnit userBusinessUnit = new UserBusinessUnit();
                 userBusinessUnit.setUserID(currentUser);
-                BusinessUnit businessUnit = getBusinessUnitService().findByName(iterBU.next().getBusiness_unit_name());
+                BusinessUnit businessUnit = getBusinessUnitService().findOne(iterBU.next().getBusiness_unit_id());
                 if(businessUnit == null){
                     throw new MyBadRequestException("business unit for user is not valid. user association is not created.");
                 }
